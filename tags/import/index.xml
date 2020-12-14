@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>import on nanko &#39;s blog~</title>
+    <link>/tags/import/</link>
+    <description>Recent content in import on nanko &#39;s blog~</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 04 Aug 2019 22:49:56 +0800</lastBuildDate><atom:link href="/tags/import/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于go mod和内部包import</title>
+      <link>/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/</link>
+      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
+      
+      <guid>/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/</guid>
+      <description>关于go mod和内部包import 编写项目的时候遇到一个问题，即项目a在GOPATH/src中，a下有bc两个文件夹，b中的1.go需要调用c中的2.go。按照传统的import方法，应通过src下的相对路径进行引用。
+1  import &amp;#34;a/c&amp;#34;   但此时如果如此编写，goland会提示无法reslove目录，即找不到对应ac的位置。最先项目没有放在src中，考虑是否因为没有放在GOPATH中导致无法找到，遂将项目转移到src下，问题并未解决。
+考虑是否goland配置有问题，查看全局gopath与项目gopath，并无问题，最终考虑go mod。
+发现关闭go mod之后，能够正常import内部包，但由于项目基于gin框架，草率解决问题显然有些敷衍，所以继续研究go mod的具体效用，最终解决。（初学对go mod等一知半解，问题比较基础）
+1、go mod 关于go mod的系统介绍和官方说明，请借鉴以下文章
+ 官方文档 (github) Roberto Selbach  Go mod即go module，是go 1.1.1版本发布的新模块特性，根本目的是为了移除对GOPATH和go get的依赖
+简单来说，是方便把代码放在src之外～
+介绍 module是相关go包的集合，是代码更替和版本控制的单元。模块主要标识为源文件夹下的go.mod文件，此文件目录也成为模块根，其取代了旧的基于src的方法，使用module的模式来指定源文件和导入包。
+go.mod文件解读 go.mod文件定义了module路径和其他需要在build时引入的模块的版本。
+如下创建一个新项目gin-test，通过这个项目来说明go mod的具体细节。
+image-20200730223448694
+首先新建文件夹gin-test 并在文件夹中使用go mod init命令进行模块初始化，注意此时指定了模块名为gin-test-mod。
+打开go.mod文件查看内容：
+image-20200730223644933
+go.mod第一行为模块名，可见模块名为gin-test-mod，之后第三行表示当前go的版本。
+此时使用go get命令去远程拉取gin的相关包
+image-20200730224237324
+可见，go get命令成功拉取到了gin-gonic相关的包，此时再查看go.mod
+image-20200730224412281
+可见此时go.mod中多了一些内容，包括一个require指令和内部一些相关依赖。
+以最后一条举例
+1  gopkg.in/yaml.v2 v2.3.0 //indirect   require命令中，声明module依赖gopkg.in/yaml.v2这个包，同时依赖特定版本，即2.3.0
+其中indirect较为复杂，参看go.mod 文件中的indirect准确含义
+go.mod内部命令 go.mod中除了上述的require命令还有exclude，replace命令，其分别表示排除某些包的特别版本，以及取代当前项目中的某些依赖包。
+1 2 3 4  require other/xxx v1.</description>
+    </item>
+    
+  </channel>
+</rss>
