@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta name="generator" content="Hugo 0.79.0" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>nanko &#39;s blog~</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="About LoveIt Theme"><link rel="canonical" href="/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><link rel="alternate" href="/index.xml" type="application/rss+xml" title="nanko &#39;s blog~">
+    <link rel="feed" href="/index.xml" type="application/rss+xml" title="nanko &#39;s blog~"><meta property="og:title" content="nanko &#39;s blog~" />
+<meta property="og:description" content="About LoveIt Theme" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/" />
+<meta property="og:updated_time" content="2019-08-17T22:41:56+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="nanko &#39;s blog~"/>
+<meta name="twitter:description" content="About LoveIt Theme"/>
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "url": "\/","author": {
+                "@type": "Person",
+                "name": "xxxx"
+            },"description": "About LoveIt Theme","image": "\/cover.png","thumbnailUrl": "\/logo.png","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","name": "nanko \u0027s blog~"
+    }
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script><div class="wrapper"><nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="/">nanko &#39;s blog~</a>
+        </div>
+        <div class="navbar-menu"><a class="menu-item" href="/posts" title="">Posts</a><a class="menu-item" href="/tags" title="">Tags</a><a class="menu-item" href="/categories" title="">Categories</a><a class="menu-item" href="/about" title="">About</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="Switch Theme"></i></a>
+        </div>
+    </div>
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="/">nanko &#39;s blog~</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="/posts" title="">Posts</a><a class="menu-item" href="/tags" title="">Tags</a><a class="menu-item" href="/categories" title="">Categories</a><a class="menu-item" href="/about" title="">About</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="Switch Theme"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container"><div class="page"><div class="home-intro"><div class="home-avatar">
+            <a href="/posts">
+                <img src=/images/avatar.png alt="avatar" title="Home">
+            </a>
+        </div><h2 class="home-description"><div id=rtp-420363a06e7a7ad793a44f06668ffa8b hidden=true>I 'm nanko, a happly gopher!!</div>
+            <div id=tp-420363a06e7a7ad793a44f06668ffa8b class="typeit"></div></h2><div class="home-social-links"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous"><a href="https://github.com/cjq99419" rel="me noopener noreffer" target="_blank">
+        <i class="fab fa-github-alt fa-fw" title="Github"></i>
+    </a>
+    <a href="mailto:cjq99419@163.com" rel="me noopener noreffer">
+        <i class="far fa-envelope fa-fw" target="_blank" title="Email"></i>
+    </a></div>
+</div>
+<article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="/2019/08/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/">golang Container包解析</a>
+    </h1><div class="post-meta"><a class="author" href="/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>nanko
+        </a>published on  <time datetime=2019-08-04>2019-08-04</time>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/golang/">Golang</a></span></div><div class="post-content">golang Container包解析 container包 包含了共三种数据结构，即：heap，list，ring
+list源码解析 1.遍历list 1 2 3  for e := l.Front(); e != nil; e = e.Next(){ //do something with e.Value }   2. Element结构体 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Element is an element of a linked list. type Element struct { // Next and previous pointers in the doubly-linked list of elements. 	// To simplify the implementation, internally a list l is implemented 	// as a ring, such that &amp;l.</div><div class="post-footer">
+        <a href="/2019/08/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/">Read More</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="/tags/golang/"><i class="fas fa-tag fa-fw"></i>&nbsp;golang</a>
+                    </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/">leetcode 48.旋转图像</a>
+    </h1><div class="post-meta"><a class="author" href="/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>nanko
+        </a>published on  <time datetime=2019-08-04>2019-08-04</time>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/leetcode/">Leetcode</a><i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/algorithm/">Algorithm</a></span></div><div class="post-content"><p>leetcode 48.旋转图像</p></div><div class="post-footer">
+        <a href="/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/">Read More</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="/tags/golang/"><i class="fas fa-tag fa-fw"></i>&nbsp;golang</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="/tags/leetcode/"><i class="fas fa-tag fa-fw"></i>&nbsp;leetcode</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="/tags/algorithm/"><i class="fas fa-tag fa-fw"></i>&nbsp;algorithm</a>
+                    </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/">关于go mod和内部包import</a>
+    </h1><div class="post-meta"><a class="author" href="/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>nanko
+        </a>published on  <time datetime=2019-08-04>2019-08-04</time>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/golang/">Golang</a></span></div><div class="post-content">关于go mod和内部包import 编写项目的时候遇到一个问题，即项目a在GOPATH/src中，a下有bc两个文件夹，b中的1.go需要调用c中的2.go。按照传统的import方法，应通过src下的相对路径进行引用。
+1  import &#34;a/c&#34;   但此时如果如此编写，goland会提示无法reslove目录，即找不到对应ac的位置。最先项目没有放在src中，考虑是否因为没有放在GOPATH中导致无法找到，遂将项目转移到src下，问题并未解决。
+考虑是否goland配置有问题，查看全局gopath与项目gopath，并无问题，最终考虑go mod。
+发现关闭go mod之后，能够正常import内部包，但由于项目基于gin框架，草率解决问题显然有些敷衍，所以继续研究go mod的具体效用，最终解决。（初学对go mod等一知半解，问题比较基础）
+1、go mod 关于go mod的系统介绍和官方说明，请借鉴以下文章
+ 官方文档 (github) Roberto Selbach  Go mod即go module，是go 1.1.1版本发布的新模块特性，根本目的是为了移除对GOPATH和go get的依赖
+简单来说，是方便把代码放在src之外～
+介绍 module是相关go包的集合，是代码更替和版本控制的单元。模块主要标识为源文件夹下的go.mod文件，此文件目录也成为模块根，其取代了旧的基于src的方法，使用module的模式来指定源文件和导入包。
+go.mod文件解读 go.mod文件定义了module路径和其他需要在build时引入的模块的版本。
+如下创建一个新项目gin-test，通过这个项目来说明go mod的具体细节。
+image-20200730223448694
+首先新建文件夹gin-test 并在文件夹中使用go mod init命令进行模块初始化，注意此时指定了模块名为gin-test-mod。
+打开go.mod文件查看内容：
+image-20200730223644933
+go.mod第一行为模块名，可见模块名为gin-test-mod，之后第三行表示当前go的版本。
+此时使用go get命令去远程拉取gin的相关包
+image-20200730224237324
+可见，go get命令成功拉取到了gin-gonic相关的包，此时再查看go.mod
+image-20200730224412281
+可见此时go.mod中多了一些内容，包括一个require指令和内部一些相关依赖。
+以最后一条举例
+1  gopkg.in/yaml.v2 v2.3.0 //indirect   require命令中，声明module依赖gopkg.in/yaml.v2这个包，同时依赖特定版本，即2.3.0
+其中indirect较为复杂，参看go.mod 文件中的indirect准确含义
+go.mod内部命令 go.mod中除了上述的require命令还有exclude，replace命令，其分别表示排除某些包的特别版本，以及取代当前项目中的某些依赖包。
+1 2 3 4  require other/xxx v1.</div><div class="post-footer">
+        <a href="/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/">Read More</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="/tags/golang/"><i class="fas fa-tag fa-fw"></i>&nbsp;golang</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="/tags/import/"><i class="fas fa-tag fa-fw"></i>&nbsp;import</a>
+                    </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/">关于Java与Golang的GC</a>
+    </h1><div class="post-meta"><a class="author" href="/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>nanko
+        </a>published on  <time datetime=2019-08-04>2019-08-04</time>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/golang/">Golang</a></span></div><div class="post-content">关于Java与Golang的GC 本文只做GC方面的一些概述，具体细节请单独看一些优秀blog。
+同时文章内容为个人理解，欢迎评论指责，谢谢！
+一、GC的普遍解决方案   一般来说GC分为两个部分，一部分是找到需要回收的对象，一部分是清除这些对象并执行一些额外操作，如碎片处理。
+  因而本文从标记和清除两个方面来叙述
+  实际上所谓的清除方案如mark-sweep是使用的可达性分析的标记法，但本文将两者分离开讲。在清理部分只单论mark-sweep的清理思想，而不考虑标记细节，此处请注意⚠️
+1、标记 总体来说，分为两大类方法，第一类方法为引用计数，也是最为基础简单的做法。第二类为可达性分析，即Golang包括Java所使用的标记方式
+1.1、引用计数法 引用计数法很好理解，即在对象头部隐式增加一个计数器，通过计数器来计算引用次数。
+如创建一个新对象并赋名，此时即为可引用状态，引用计数器++。
+1  Student stu = new Student();   此时对象的引用为stu，计数器非0，则认定为有效对象。若此时将stu置空。
+1  stu = null;   此时无法再引用到之前创建的对象，即对象存在与内存中，但引用stu已经被抹除，此时该对象计数器清零，可以被回收。
+但仔细思考一下，引用计数法有一些难以解决的问题，如考虑以下场景：类A包含类B的成员变量，同时类B也包含类A，此时分别实例化两个类的对象，并相互引用。此时两个类内部的成员变量都包含对方类的引用，即使此时在主函数中将两个类饮用置为null，两个实例在内存中依然会相互引用。计数器不清零，二者无法调用，也无法被清理。
+preview
+（上图来自 知乎 海纳 GC算法之引用计数）
+所以可能会想到，既然我们考虑GC的根本是可不可以到达，或可不可以通过直接或间接的引用去调用对象，那么我去构建一个引用有向图，做深度或者广度遍历不就知道哪些可以留，哪些没有用了嘛？
+这就是可达性分析的原理～
+1.2、可达性分析 简单来说，就是选取几个可靠的根节点，从根结点开始做遍历，遍历所有可以到达的对象，那么到不了的就视为无效对象，应被GC回收，这种想法就很好的避免了循环引用的问题，像是Java和Go的GC都采用的这种策略。但这种方式也会有一些缺点，和算法一样嘛，照顾了时间就要多花空间，没有完美的算法，只有合适的算法。
+可达性分析的重点在于：如何选择合适的根节点
+我们可以大概看看Java是如何选择的，JVM的GC通常会选择以下四类作为根节点
+ VM Stack中引用的对象 方法区中类静态引用的对象 方法区中常量引用的对象 本地方法栈中的Native方法（JNI）  涉及Java内存模型等知识，简单讲解一下
+Java中Running Data Area包含几个区域，如总程序调用需要的栈区，即VM Stack，动态分配的堆区heap，方法区Method Area，还有PCR程序计数器和Native本地方法区。首先栈区为根节点的主要选择区，即在栈中的引用对象需要作为根节点处理。此外，类中的静态引用是作为类属性非对象属性存在，因而具有根节点特性。常量同理，这些都分配在堆区。还有本地方法栈的Native方法，Native方法本质是不在JVM的栈中调用的，而是动态连接在C栈（或其他）中进行处理。此外，Java在处理无法到达节点时，会留有一次生存机会，去判断是否执行finalize()方法，此处不细讲，毕竟不做Java，不是特别了解JVM。
+而Go中的选择就更简单一些，即全局变量和G Stack中的引用指针，简单来说就是全局量和go程中的引用指针。因为Go中没有类的封装概念，因而Gc Root选择也相对简单一些
+可达性分析的具体实现，如怎么去解引用等可深入了解一下，此处不再细解
+1.3 二者对比 引用计数法很好的将标记工作平摊到日常的对象创建引用过程中，在对象引用时直接在头部计数器++即可，扫描阶段直接判断所有的计数器，把为0的清理掉即可。但问题也比较突出，就是循环引用终究无法解决，这样会造成很多无效引用挤占内存空间。但相对来说判定效率高，速度快，GC不会对性能产生较大影响。
+可达性分析相对来说较为准确，能够很好的解决循环引用等问题。但可达性分析最大的问题在于，为了保持对象的一致性，即扫描阶段所有对象状态不可变更，此时需要STW（stop the world）。对于高并发的网络服务，STW无疑是致命的，因而之后也会提到，Go是如何优化这些缺点的。</div><div class="post-footer">
+        <a href="/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/">Read More</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="/tags/golang/"><i class="fas fa-tag fa-fw"></i>&nbsp;golang</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="/tags/java/"><i class="fas fa-tag fa-fw"></i>&nbsp;java</a>
+                    </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/">反转链表的n种实现（go）</a>
+    </h1><div class="post-meta"><a class="author" href="/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>nanko
+        </a>published on  <time datetime=2019-08-04>2019-08-04</time>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="/categories/algorithm/">Algorithm</a></span></div><div class="post-content">反转链表的n种实现（go） 一、双指针迭代法 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17  func reverseList(head *ListNode) *ListNode { if head == nil { return nil } else { var tmp *ListNode cur := head.Next pre := head for cur != nil { tmp = cur.Next cur.Next = pre pre = cur cur = tmp } head.Next = nil return pre } }   image-20200921114708051</div><div class="post-footer">
+        <a href="/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/">Read More</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="/tags/golang/"><i class="fas fa-tag fa-fw"></i>&nbsp;golang</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="/tags/algorithm/"><i class="fas fa-tag fa-fw"></i>&nbsp;algorithm</a>
+                    </span></div></div>
+</article></div></div>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><script src="/js/lib/typeit/typeit.min.js"></script><script>window.typeitArr=[["tp-420363a06e7a7ad793a44f06668ffa8b"]];</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/blog.min.js"></script></body>
+</html>

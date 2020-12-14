@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>java on nanko &#39;s blog~</title>
+    <link>/tags/java/</link>
+    <description>Recent content in java on nanko &#39;s blog~</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 04 Aug 2019 22:49:56 +0800</lastBuildDate><atom:link href="/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于Java与Golang的GC</title>
+      <link>/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/</link>
+      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
+      
+      <guid>/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/</guid>
+      <description>关于Java与Golang的GC 本文只做GC方面的一些概述，具体细节请单独看一些优秀blog。
+同时文章内容为个人理解，欢迎评论指责，谢谢！
+一、GC的普遍解决方案   一般来说GC分为两个部分，一部分是找到需要回收的对象，一部分是清除这些对象并执行一些额外操作，如碎片处理。
+  因而本文从标记和清除两个方面来叙述
+  实际上所谓的清除方案如mark-sweep是使用的可达性分析的标记法，但本文将两者分离开讲。在清理部分只单论mark-sweep的清理思想，而不考虑标记细节，此处请注意⚠️
+1、标记 总体来说，分为两大类方法，第一类方法为引用计数，也是最为基础简单的做法。第二类为可达性分析，即Golang包括Java所使用的标记方式
+1.1、引用计数法 引用计数法很好理解，即在对象头部隐式增加一个计数器，通过计数器来计算引用次数。
+如创建一个新对象并赋名，此时即为可引用状态，引用计数器++。
+1  Student stu = new Student();   此时对象的引用为stu，计数器非0，则认定为有效对象。若此时将stu置空。
+1  stu = null;   此时无法再引用到之前创建的对象，即对象存在与内存中，但引用stu已经被抹除，此时该对象计数器清零，可以被回收。
+但仔细思考一下，引用计数法有一些难以解决的问题，如考虑以下场景：类A包含类B的成员变量，同时类B也包含类A，此时分别实例化两个类的对象，并相互引用。此时两个类内部的成员变量都包含对方类的引用，即使此时在主函数中将两个类饮用置为null，两个实例在内存中依然会相互引用。计数器不清零，二者无法调用，也无法被清理。
+preview
+（上图来自 知乎 海纳 GC算法之引用计数）
+所以可能会想到，既然我们考虑GC的根本是可不可以到达，或可不可以通过直接或间接的引用去调用对象，那么我去构建一个引用有向图，做深度或者广度遍历不就知道哪些可以留，哪些没有用了嘛？
+这就是可达性分析的原理～
+1.2、可达性分析 简单来说，就是选取几个可靠的根节点，从根结点开始做遍历，遍历所有可以到达的对象，那么到不了的就视为无效对象，应被GC回收，这种想法就很好的避免了循环引用的问题，像是Java和Go的GC都采用的这种策略。但这种方式也会有一些缺点，和算法一样嘛，照顾了时间就要多花空间，没有完美的算法，只有合适的算法。
+可达性分析的重点在于：如何选择合适的根节点
+我们可以大概看看Java是如何选择的，JVM的GC通常会选择以下四类作为根节点
+ VM Stack中引用的对象 方法区中类静态引用的对象 方法区中常量引用的对象 本地方法栈中的Native方法（JNI）  涉及Java内存模型等知识，简单讲解一下
+Java中Running Data Area包含几个区域，如总程序调用需要的栈区，即VM Stack，动态分配的堆区heap，方法区Method Area，还有PCR程序计数器和Native本地方法区。首先栈区为根节点的主要选择区，即在栈中的引用对象需要作为根节点处理。此外，类中的静态引用是作为类属性非对象属性存在，因而具有根节点特性。常量同理，这些都分配在堆区。还有本地方法栈的Native方法，Native方法本质是不在JVM的栈中调用的，而是动态连接在C栈（或其他）中进行处理。此外，Java在处理无法到达节点时，会留有一次生存机会，去判断是否执行finalize()方法，此处不细讲，毕竟不做Java，不是特别了解JVM。
+而Go中的选择就更简单一些，即全局变量和G Stack中的引用指针，简单来说就是全局量和go程中的引用指针。因为Go中没有类的封装概念，因而Gc Root选择也相对简单一些
+可达性分析的具体实现，如怎么去解引用等可深入了解一下，此处不再细解
+1.3 二者对比 引用计数法很好的将标记工作平摊到日常的对象创建引用过程中，在对象引用时直接在头部计数器++即可，扫描阶段直接判断所有的计数器，把为0的清理掉即可。但问题也比较突出，就是循环引用终究无法解决，这样会造成很多无效引用挤占内存空间。但相对来说判定效率高，速度快，GC不会对性能产生较大影响。
+可达性分析相对来说较为准确，能够很好的解决循环引用等问题。但可达性分析最大的问题在于，为了保持对象的一致性，即扫描阶段所有对象状态不可变更，此时需要STW（stop the world）。对于高并发的网络服务，STW无疑是致命的，因而之后也会提到，Go是如何优化这些缺点的。</description>
+    </item>
+    
+  </channel>
+</rss>
