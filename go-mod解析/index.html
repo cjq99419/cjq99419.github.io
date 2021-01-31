@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>go mod解析 - nanko的快乐小窝</title><meta name="Description" content="go mod解析"><meta property="og:title" content="go mod解析" />
+<meta property="og:description" content="go mod解析" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" />
+<meta property="og:image" content="https://example.com/logo.png"/>
+<meta property="article:published_time" content="2020-08-04T22:49:56+08:00" />
+<meta property="article:modified_time" content="2020-08-17T22:41:56+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/logo.png"/>
+
+<meta name="twitter:title" content="go mod解析"/>
+<meta name="twitter:description" content="go mod解析"/>
+<meta name="application-name" content="nanko &#39;s blog">
+<meta name="apple-mobile-web-app-title" content="nanko &#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" /><link rel="prev" href="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" /><link rel="next" href="https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "go mod解析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/go-mod%E8%A7%A3%E6%9E%90\/"
+        },"image": [{
+                            "@type": "ImageObject",
+                            "url": "https:\/\/example.com\/images\/Apple-Devices-Preview.png",
+                            "width":  3200 ,
+                            "height":  2048 
+                        }],"genre": "posts","keywords": "golang","wordcount":  1843 ,
+        "url": "https:\/\/example.com\/go-mod%E8%A7%A3%E6%9E%90\/","datePublished": "2020-08-04T22:49:56+08:00","dateModified": "2020-08-17T22:41:56+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/example.com\/images\/avatar.png",
+                    "width":  528 ,
+                    "height":  560 
+                }},"author": {
+                "@type": "Person",
+                "name": "nanko"
+            },"description": "go mod解析"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于nanko </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于nanko</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">go mod解析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nanko</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-08-04">2020-08-04</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1843 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#关于go-mod和内部包import">关于go mod和内部包import</a></li>
+    <li><a href="#1go-mod">1、go mod</a>
+      <ul>
+        <li><a href="#介绍">介绍</a></li>
+        <li><a href="#gomod文件解读">go.mod文件解读</a></li>
+        <li><a href="#gomod内部命令">go.mod内部命令</a></li>
+        <li><a href="#go-mod-命令">go mod 命令</a></li>
+        <li><a href="#go111module-环境变量">GO111MODULE 环境变量</a></li>
+      </ul>
+    </li>
+    <li><a href="#modules模式下的import引用">modules模式下的import引用</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="关于go-mod和内部包import">关于go mod和内部包import</h2>
+<p>编写项目的时候遇到一个问题，即项目a在GOPATH/src中，a下有bc两个文件夹，b中的1.go需要调用c中的2.go。按照传统的import方法，应通过src下的相对路径进行引用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;a/c&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>但此时如果如此编写，goland会提示无法reslove目录，即找不到对应ac的位置。最先项目没有放在src中，考虑是否因为没有放在GOPATH中导致无法找到，遂将项目转移到src下，问题并未解决。</p>
+<p>考虑是否goland配置有问题，查看全局gopath与项目gopath，并无问题，最终考虑go mod。</p>
+<p>发现关闭go mod之后，能够正常import内部包，但由于项目基于gin框架，草率解决问题显然有些敷衍，所以继续研究go mod的具体效用，最终解决。（初学对go mod等一知半解，问题比较基础）</p>
+<h2 id="1go-mod">1、go mod</h2>
+<p>关于go mod的系统介绍和官方说明，请借鉴以下文章</p>
+<ol>
+<li><a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener noreffer">官方文档</a> (github)</li>
+<li><a href="https://roberto.selbach.ca/intro-to-go-modules/" target="_blank" rel="noopener noreffer">Roberto Selbach</a></li>
+</ol>
+<p>Go mod即go module，是go 1.1.1版本发布的新模块特性，根本目的是为了移除对GOPATH和go get的依赖</p>
+<p>简单来说，是方便把代码<strong>放在src</strong>之外～</p>
+<h3 id="介绍">介绍</h3>
+<p>module是<strong>相关go包</strong>的集合，是代码更替和版本控制的单元。模块主要标识为源文件夹下的go.mod文件，此文件目录也成为模块根，其取代了旧的基于src的方法，使用module的模式来指定源文件和导入包。</p>
+<h3 id="gomod文件解读">go.mod文件解读</h3>
+<p>go.mod文件定义了<strong>module</strong>路径和其他需要在build时引入的模块的版本。</p>
+<p>如下创建一个新项目<strong>gin-test</strong>，通过这个项目来说明go mod的具体细节。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiunrv2j30h102640o.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiunrv2j30h102640o.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiunrv2j30h102640o.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiunrv2j30h102640o.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiunrv2j30h102640o.jpg"
+        title="image-20200730223448694" /></p>
+<p>首先新建文件夹<strong>gin-test</strong> 并在文件夹中使用go mod init命令进行模块初始化，注意此时指定了模块名为<strong>gin-test-mod</strong>。</p>
+<p>打开<strong>go.mod</strong>文件查看内容：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiy5t4oj30ck02c0u7.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiy5t4oj30ck02c0u7.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiy5t4oj30ck02c0u7.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiy5t4oj30ck02c0u7.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fiy5t4oj30ck02c0u7.jpg"
+        title="image-20200730223644933" /></p>
+<p><strong>go.mod</strong>第一行为模块名，可见模块名为<strong>gin-test-mod</strong>，之后第三行表示当前go的版本。</p>
+<p>此时使用<strong>go get</strong>命令去远程拉取gin的相关包</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj3erovj30mp07i7ek.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj3erovj30mp07i7ek.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj3erovj30mp07i7ek.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj3erovj30mp07i7ek.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj3erovj30mp07i7ek.jpg"
+        title="image-20200730224237324" /></p>
+<p>可见，<strong>go get</strong>命令成功拉取到了<strong>gin-gonic</strong>相关的包，此时再查看<strong>go.mod</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj94d3kj30o70ax7i5.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj94d3kj30o70ax7i5.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj94d3kj30o70ax7i5.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj94d3kj30o70ax7i5.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fj94d3kj30o70ax7i5.jpg"
+        title="image-20200730224412281" /></p>
+<p>可见此时go.mod中多了一些内容，包括一个require指令和内部一些相关依赖。</p>
+<p>以最后一条举例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mod" data-lang="mod"><span class="n">gopkg</span><span class="p">.</span><span class="n">in</span><span class="o">/</span><span class="n">yaml</span><span class="p">.</span><span class="n">v2</span> <span class="n">v2</span><span class="p">.</span><span class="mf">3.0</span> <span class="o">//</span><span class="n">indirect</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>require命令中，声明module依赖gopkg.in/yaml.v2这个包，同时依赖特定版本，即2.3.0</p>
+<p>其中indirect较为复杂，参看<a href="https://my.oschina.net/renhc/blog/3162751" target="_blank" rel="noopener noreffer">go.mod 文件中的indirect准确含义</a></p>
+<h3 id="gomod内部命令">go.mod内部命令</h3>
+<p>go.mod中除了上述的require命令还有exclude，replace命令，其分别表示排除某些包的特别版本，以及取代当前项目中的某些依赖包。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">require</span> <span class="nx">other</span><span class="o">/</span><span class="nx">xxx</span> 	<span class="nx">v1</span><span class="mf">.0.0</span>
+<span class="nx">require</span> <span class="nx">new</span><span class="o">/</span><span class="nx">xxx</span>		<span class="nx">v2</span><span class="mf">.0.0</span>
+<span class="nx">exclude</span> <span class="nx">old</span><span class="o">/</span><span class="nx">xxx</span> 		<span class="nx">v1</span><span class="mf">.0.0</span>
+<span class="nx">replace</span> <span class="nx">bad</span><span class="o">/</span><span class="nx">xxx</span> 		<span class="nx">v1</span><span class="mf">.0.0</span> 	<span class="p">=&gt;</span> <span class="nx">good</span><span class="o">/</span><span class="nx">thing</span> <span class="nx">v2</span><span class="mf">.0.0</span>
+</code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="go-mod-命令">go mod 命令</h3>
+<p>go mod提供了诸多命令来操作modules，同时如上述例子，在使用go get一些命令时，会自动后台对go.mod进行更新。</p>
+<p>命令语法：<strong>go mod &lt;command&gt; [arguments]</strong></p>
+<ul>
+<li>download : 下载模块到本地缓存，即GOCACHE</li>
+<li>edit : 编辑go.mod文件</li>
+<li>graph : 打印模块需求</li>
+<li>init : 初始化新的模块</li>
+<li>tidy : 添加缺失模块，移除多余模块</li>
+<li>verify : 验证依赖</li>
+<li>why : 解释包或模块</li>
+</ul>
+<hr>
+<h3 id="go111module-环境变量">GO111MODULE 环境变量</h3>
+<p><strong>GO111MODULE</strong> 是module支持的临时环境变量，其可以设置：off， on， auto。</p>
+<p>设置为off时，将使用原始的GOPATH模式，即在gopath中查找依赖。</p>
+<p>设置为on，则使用mod功能，不访问gopath。</p>
+<p>设置为auto即默认模式，此时go会根据当前目录决定是否使用modules功能，若当前目录在src外切包含go.mod文件，才会启用mod功能。</p>
+<h2 id="modules模式下的import引用">modules模式下的import引用</h2>
+<p>继续上面的例子，首先创建文件夹sum-test，并创建sum-func.go实现一个简单的sum函数</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjdfdjsj307j03smxa.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjdfdjsj307j03smxa.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjdfdjsj307j03smxa.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjdfdjsj307j03smxa.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjdfdjsj307j03smxa.jpg"
+        title="image-20200730232243334" /></p>
+<p>此时进入gin-test文件夹，创建main.go并尝试调用sum函数</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjgd2j9j30ck05mgm4.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjgd2j9j30ck05mgm4.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjgd2j9j30ck05mgm4.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjgd2j9j30ck05mgm4.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjgd2j9j30ck05mgm4.jpg"
+        title="image-20200730232356820" /></p>
+<p>此时能够正确运算结果，总结如下</p>
+<ul>
+<li>
+<p>使用modules的情况下，<strong>不能按照原先gopath的方式引用内部包</strong>，需要通过**<sup>modules name</sup>/<sub>dir</sub>**的方式来引用。如上述**module name为gin-test-mod**，引用sum-test文件夹下的sum-func.go中的Sum函数，需要通过**gin-test-mod/sum-test**的方式来引用。（**注意要使用modules名，使用gin-test目录名无效**）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjjq7rhj306o03dwen.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjjq7rhj306o03dwen.jpg, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjjq7rhj306o03dwen.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjjq7rhj306o03dwen.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh9fjjq7rhj306o03dwen.jpg"
+        title="目录结构" /></p>
+</li>
+<li>
+<p>当包名包含-符号时，如sum-test，在.go中，要转化为_下划线，即sum_test</p>
+</li>
+<li>
+<p>若希望跨包调用函数，需将函数名首字母大写</p>
+</li>
+<li>
+<p>欢迎点赞收藏加关注！！如有错误请指正，非常感谢！</p>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-08-17</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-mod%E8%A7%A3%E6%9E%90/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" data-title="go mod解析" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" data-title="go mod解析"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" data-title="go mod解析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" data-title="go mod解析"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" class="prev" rel="prev" title="golang container包解析"><i class="fas fa-angle-left fa-fw"></i>golang container包解析</a>
+            <a href="/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/" class="next" rel="next" title="Leetcode 48.旋转图像">Leetcode 48.旋转图像<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.79.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nanko</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -1,65 +1,65 @@
-# About LoveIt
+# 关于 LoveIt
 
 
-[LoveIt :(far fa-heart):](https://github.com/dillonzq/LoveIt) is a **clean**, **elegant** but **advanced** blog theme for [Hugo](https://gohugo.io/) developed by [Dillon](https://dillonzq.com).
+[LoveIt :(far fa-heart):](https://github.com/dillonzq/LoveIt) 是一个由 [Dillon](https://dillonzq.com) 开发的**简洁**、**优雅**且**高效**的 [Hugo](https://gohugo.io/) 博客主题。
 
-It is based on the original [LeaveIt Theme](https://github.com/liuzc/LeaveIt/) and [KeepIt Theme](https://github.com/liuzc/LeaveIt/).
+它的原型基于 [LeaveIt 主题](https://github.com/liuzc/LeaveIt/) 和 [KeepIt 主题](https://github.com/liuzc/LeaveIt/)。
 
-![Hugo Theme LoveIt](/images/Apple-Devices-Preview.png)
+![Hugo 主题 LoveIt](/images/Apple-Devices-Preview.png)
 
-### Features
+### 特性
 
-#### Performance and SEO
+#### 性能和 SEO
 
-* :(fas fa-rocket): Optimized for performance: 99/100 on mobile and 100/100 on desktop in [Google PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights)
-* :(fab fa-searchengin): Optimized SEO performance with a correct SEO SCHEMA based on JSON-LD
-* :(fab fa-google): [Google Analytics](https://analytics.google.com/analytics) support
-* :(fas fa-search): Search engine verification support (Google, Bind, Yandex and Baidu)
-* :(fas fa-tachometer-alt): CDN for all third-party libraries support
-* :(far fa-images): Automatically converted images with Lazy Load by [lazysizes](https://github.com/aFarkas/lazysizes)
+* :(fas fa-rocket): 性能优化：在 [Google PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights) 中， 99/100 的移动设备得分和 100/100 的桌面设备得分
+* :(fab fa-searchengin): 使用基于 JSON-LD 格式 的 SEO SCHEMA 文件进行 SEO 优化
+* :(fab fa-google): 支持 [Google Analytics](https://analytics.google.com/analytics)
+* :(fas fa-search): 支持搜索引擎的网站验证 (Google, Bind, Yandex and Baidu)
+* :(fas fa-tachometer-alt): 支持所有第三方库的 CDN
+* :(far fa-images): 基于 [lazysizes](https://github.com/aFarkas/lazysizes) 自动转换图片为懒加载
 
-#### Appearance and Layout
+#### 外观和布局
 
-* :(fas fa-desktop): / :(fas fa-mobile): Responsive layout
-* :(fas fa-moon): / :(fas fa-sun): Mode
-* :(fas fa-layer-group): A More coerent style beetwen page and sections
-* :(fas fa-ellipsis-h): Pagination support
-* :(far fa-list-alt): Easy-to-use and self-expanding article catalog, while adapting to the mobile side
-* :(fas fa-language): Multilanguage support and I18N ready
-* :(fab fa-css3-alt): Beautiful CSS animation
+* :(fas fa-desktop): / :(fas fa-mobile): 响应式布局
+* :(fas fa-moon): / :(fas fa-sun): 模式
+* :(fas fa-layer-group): 页面和列表保持一致的视觉样式
+* :(fas fa-ellipsis-h): 支持分页
+* :(far fa-list-alt): 易用和自动展开的文章目录，同时适配移动端
+* :(fas fa-language): 支持多语言和国际化
+* :(fab fa-css3-alt): 美观的 CSS 动画
 
-#### Social and Comment Systems
+#### 社交和评论系统
 
-* :(far fa-user): Gravatar support by [Gravatar](https://gravatar.com)
-* :(fas fa-user-circle): Local Avatar support
-* :(far fa-id-card): Up to 54 social sites supported
-* :(fas fa-share-square): Share post support
-* :(far fa-comment): Disqus comment system support by [Disqus](https://disqus.com)
-* :(far fa-comment-dots): Gitalk comment system support by [Gitalk](https://github.com/gitalk/gitalk)
-* :(far fa-comment-alt): Valine comment system support by [Valine](https://valine.js.org/)
+* :(far fa-user): 支持 [Gravatar](https://gravatar.com) 头像
+* :(fas fa-user-circle): 支持本地头像
+* :(far fa-id-card): 支持多达 54 种社交链接
+* :(fas fa-share-square): 支持文章分享
+* :(far fa-comment): 支持 [Disqus](https://disqus.com) 评论系统
+* :(far fa-comment-dots): 支持 [Gitalk](https://github.com/gitalk/gitalk) 评论系统
+* :(far fa-comment-alt): 支持 [Valine](https://valine.js.org/) 评论系统
 
-#### Extended Features
+#### 扩展功能
 
-* :(fas fa-code): Automatically highlighting code by chroma in Hugo
-* :(fab fa-font-awesome): Extended markdown syntax for [Font Awesome](https://fontawesome.com/) icons
-* :(fas fa-square-root-alt): Math formula support by [Katex](https://katex.org/)
-* :(fas fa-project-diagram): Diagram syntax shortcode support by [mermaid](https://github.com/knsv/mermaid)
-* :(fas fa-music): Embedded music player support by [APlayer](https://github.com/MoePlayer/APlayer) and [MetingJS](https://github.com/metowolf/MetingJS)
-* :(fas fa-tv): Bilibili player support
-* :(far fa-bell): Kinds of admonitions shortcode support
-* :(fas fa-align-left): Custom align and float style shortcodes support
-* :(fas fa-i-cursor): Animated typing support by [TypeIt](https://typeitjs.com/)
-* :(far fa-clock): Animated coutdown support by [jQuery.countdown](https://github.com/hilios/jQuery.countdown)
-* :(fas fa-arrow-up): Dynamic to top support by [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll)
+* :(fas fa-code): 基于 Hugo 使用的 chroma 进行代码高亮
+* :(fab fa-font-awesome): 使用 [Font Awesome](https://fontawesome.com/) 图标的扩展 Markdown 语法
+* :(fas fa-square-root-alt): 支持基于 [Katex](https://katex.org/) 的数学公式
+* :(fas fa-project-diagram): 支持基于 [mermaid](https://github.com/knsv/mermaid) 的图表和流程图生成功能
+* :(fas fa-music): 支持基于 [APlayer](https://github.com/MoePlayer/APlayer) 和 [MetingJS](https://github.com/metowolf/MetingJS) 的内嵌音乐播放器
+* :(fas fa-tv): 支持内嵌 Bilibili 视频
+* :(far fa-bell): 支持多种提醒样式的 shortcode
+* :(fas fa-align-left): 支持自定义对齐和浮动方式的 shortcode
+* :(fas fa-i-cursor): 支持基于 [TypeIt](https://typeitjs.com/) 的打字动画
+* :(far fa-clock): 支持基于 [jQuery.countdown](https://github.com/hilios/jQuery.countdown) 的倒计时动画
+* :(fas fa-arrow-up): 支持基于 [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll) 的回到顶部动画
 * ...
 
-### License
+### 许可协议
 
-LoveIt is licensed under the MIT license.
+LoveIt 根据 MIT 许可协议授权。
 
-Check the [LICENSE file](https://github.com/dillonzq/LoveIt/blob/master/LICENSE) for details.
+更多信息请查看 [LICENSE 文件](https://github.com/dillonzq/LoveIt/blob/master/LICENSE)。
 
-Thanks to the authors of following resources included in the theme:
+感谢以下在主题中使用过的项目的作者：
 
 * [Font Awesome](https://fontawesome.com/)
 * [Animate.css](https://daneden.github.io/animate.css/)

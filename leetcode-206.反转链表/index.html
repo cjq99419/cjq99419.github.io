@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Leetcode 206.反转链表 - nanko的快乐小窝</title><meta name="Description" content="Leetcode 206.反转链表"><meta property="og:title" content="Leetcode 206.反转链表" />
+<meta property="og:description" content="Leetcode 206.反转链表" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" />
+<meta property="og:image" content="https://example.com/logo.png"/>
+<meta property="article:published_time" content="2020-10-05T21:23:56+08:00" />
+<meta property="article:modified_time" content="2020-10-05T21:23:56+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/logo.png"/>
+
+<meta name="twitter:title" content="Leetcode 206.反转链表"/>
+<meta name="twitter:description" content="Leetcode 206.反转链表"/>
+<meta name="application-name" content="nanko &#39;s blog">
+<meta name="apple-mobile-web-app-title" content="nanko &#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" /><link rel="prev" href="https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/" /><link rel="next" href="https://example.com/%E5%85%B3%E4%BA%8Ejava%E5%92%8Cgolang%E7%9A%84gc/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Leetcode 206.反转链表",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8\/"
+        },"image": [{
+                            "@type": "ImageObject",
+                            "url": "https:\/\/example.com\/images\/Apple-Devices-Preview.png",
+                            "width":  3200 ,
+                            "height":  2048 
+                        }],"genre": "posts","keywords": "golang, leetcode, algorithm","wordcount":  911 ,
+        "url": "https:\/\/example.com\/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8\/","datePublished": "2020-10-05T21:23:56+08:00","dateModified": "2020-10-05T21:23:56+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/example.com\/images\/avatar.png",
+                    "width":  528 ,
+                    "height":  560 
+                }},"author": {
+                "@type": "Person",
+                "name": "nanko"
+            },"description": "Leetcode 206.反转链表"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于nanko </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于nanko</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Leetcode 206.反转链表</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nanko</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/leetcode/"><i class="far fa-folder fa-fw"></i>leetcode</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-05">2020-10-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 911 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#反转链表的n种实现go">反转链表的n种实现（go）</a>
+      <ul>
+        <li><a href="#一双指针迭代法">一、双指针迭代法</a></li>
+        <li><a href="#二递归法">二、递归法</a></li>
+        <li><a href="#heading"></a></li>
+        <li><a href="#三对比与拓展">三、对比与拓展</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="反转链表的n种实现go">反转链表的n种实现（go）</h2>
+<h3 id="一双指针迭代法">一、双指针迭代法</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">reverseList</span><span class="p">(</span><span class="nx">head</span> <span class="o">*</span><span class="nx">ListNode</span><span class="p">)</span> <span class="o">*</span><span class="nx">ListNode</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">head</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp</span> <span class="o">*</span><span class="nx">ListNode</span>
+		<span class="nx">cur</span> <span class="o">:=</span> <span class="nx">head</span><span class="p">.</span><span class="nx">Next</span>
+		<span class="nx">pre</span> <span class="o">:=</span> <span class="nx">head</span>
+		<span class="k">for</span> <span class="nx">cur</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">tmp</span> <span class="p">=</span> <span class="nx">cur</span><span class="p">.</span><span class="nx">Next</span>
+			<span class="nx">cur</span><span class="p">.</span><span class="nx">Next</span> <span class="p">=</span> <span class="nx">pre</span>
+			<span class="nx">pre</span> <span class="p">=</span> <span class="nx">cur</span>
+			<span class="nx">cur</span> <span class="p">=</span> <span class="nx">tmp</span>
+		<span class="p">}</span>
+		<span class="nx">head</span><span class="p">.</span><span class="nx">Next</span> <span class="p">=</span> <span class="kc">nil</span>
+		<span class="k">return</span> <span class="nx">pre</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4lt2sypj30e702wwet.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4lt2sypj30e702wwet.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1giy4lt2sypj30e702wwet.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1giy4lt2sypj30e702wwet.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4lt2sypj30e702wwet.jpg"
+        title="image-20200921114708051" /></p>
+<p>比较好理解的算法，即设置两个指针，其中<strong>cur表示当前节点，pre表示前一个节点，tmp用作中间状态保存</strong>。</p>
+<p>首先由于cur需要指向head的next，因而需要<strong>单独处理head为nil的情况</strong>，初始状态即设置cur为head.next，pre为head</p>
+<p>每次进行循环，当cur为nil，即pre为末尾节点时停止循环，每次循环中的目的就是把cur的next指向pre，并且更新pre和cur</p>
+<p>由于cur设置next之后，无法向下移动，所以需要用tmp保存cur的next节点。</p>
+<p>即tmp保存cur的next，将cur的next设置为pre，pre设置为cur，再把tmp保存的原next给cur，实现cur和pre的前移动。</p>
+<p><strong>注意，最后要把尾节点head的next设置为nil，由于head最开始为pre，所以依然指向第二个节点，进而形成一二节点的环</strong>。</p>
+<h3 id="二递归法">二、递归法</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">reverseList</span><span class="p">(</span><span class="nx">head</span> <span class="o">*</span><span class="nx">ListNode</span><span class="p">)</span> <span class="o">*</span><span class="nx">ListNode</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">head</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="nx">head</span><span class="p">.</span><span class="nx">Next</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">head</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">cur</span> <span class="o">:=</span> <span class="nf">reverseList</span><span class="p">(</span><span class="nx">head</span><span class="p">.</span><span class="nx">Next</span><span class="p">)</span>
+		<span class="nx">head</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span> <span class="p">=</span> <span class="nx">head</span>
+		<span class="nx">head</span><span class="p">.</span><span class="nx">Next</span> <span class="p">=</span> <span class="kc">nil</span>
+		<span class="k">return</span> <span class="nx">cur</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4mjz7jij30do02yglx.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4mjz7jij30do02yglx.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1giy4mjz7jij30do02yglx.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1giy4mjz7jij30do02yglx.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1giy4mjz7jij30do02yglx.jpg"
+        title="image-20200921114753212" /></p>
+<p>建议看leetcode的题解，这里简单说明</p>
+<p>递归法即首先递归到尾节点，之后通过递归栈道保存状态向前遍历。</p>
+<p>每次将头节点的next的next设置为头，如链表1-2-3-4-5，当头为4时，将4.next即5的next设置为4，等于把指针方向反转一下，在返回递归状态来向前处理节点3，最后实现整个链表的反转。</p>
+<p>注意返回的cur实际上并不变化，保存的就是链表的最后节点，其实可以定义全局量，在触发边界条件的时候保存，之后返回也可。</p>
+<h3 id="heading"></h3>
+<h3 id="三对比与拓展">三、对比与拓展</h3>
+<p>由于递归法隐式使用递归栈，实际上空间复杂度会稍高，两者时间复杂度相差不大，都在O(n)级别。</p>
+<p>而且递归法不太好理解，详细可以看 <a href="https://leetcode-cn.com/problems/reverse-linked-list/solution/" target="_blank" rel="noopener noreffer">leetcode  206.反转链表</a>有几个题解讲的很细致。</p>
+<p>此外也可以使用栈或者中间节点方式，如定义一个栈，第一次遍历进行push操作，之后pop再连接即可，但同样空间复杂度较高。</p>
+<p>也可以定义一个空头节点，遍历到结尾递归返回的时候，把每个节点接上去，或者不递归直接迭代插入到首元素也可。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-10-05</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-title="Leetcode 206.反转链表" data-hashtags="golang,leetcode,algorithm"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-title="Leetcode 206.反转链表"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-title="Leetcode 206.反转链表"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-title="Leetcode 206.反转链表"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a>,&nbsp;<a href="/tags/leetcode/">leetcode</a>,&nbsp;<a href="/tags/algorithm/">algorithm</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/" class="prev" rel="prev" title="Leetcode 48.旋转图像"><i class="fas fa-angle-left fa-fw"></i>Leetcode 48.旋转图像</a>
+            <a href="/%E5%85%B3%E4%BA%8Ejava%E5%92%8Cgolang%E7%9A%84gc/" class="next" rel="next" title="关于Java与Golang的GC">关于Java与Golang的GC<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.79.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nanko</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

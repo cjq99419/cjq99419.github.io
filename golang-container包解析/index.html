@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>golang container包解析 - nanko的快乐小窝</title><meta name="Description" content="golang container包解析"><meta property="og:title" content="golang container包解析" />
+<meta property="og:description" content="golang container包解析" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" />
+<meta property="og:image" content="https://example.com/logo.png"/>
+<meta property="article:published_time" content="2020-08-04T22:49:56+08:00" />
+<meta property="article:modified_time" content="2020-08-17T22:41:56+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/logo.png"/>
+
+<meta name="twitter:title" content="golang container包解析"/>
+<meta name="twitter:description" content="golang container包解析"/>
+<meta name="application-name" content="nanko &#39;s blog">
+<meta name="apple-mobile-web-app-title" content="nanko &#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" /><link rel="next" href="https://example.com/go-mod%E8%A7%A3%E6%9E%90/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "golang container包解析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90\/"
+        },"image": [{
+                            "@type": "ImageObject",
+                            "url": "https:\/\/example.com\/images\/Apple-Devices-Preview.png",
+                            "width":  3200 ,
+                            "height":  2048 
+                        }],"genre": "posts","keywords": "golang","wordcount":  1868 ,
+        "url": "https:\/\/example.com\/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90\/","datePublished": "2020-08-04T22:49:56+08:00","dateModified": "2020-08-17T22:41:56+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/example.com\/images\/avatar.png",
+                    "width":  528 ,
+                    "height":  560 
+                }},"author": {
+                "@type": "Person",
+                "name": "nanko"
+            },"description": "golang container包解析"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于nanko </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于nanko</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">golang container包解析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nanko</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-08-04">2020-08-04</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1868 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#golang-container包解析">golang Container包解析</a>
+      <ul>
+        <li><a href="#list源码解析">list源码解析</a>
+          <ul>
+            <li><a href="#1遍历list">1.遍历list</a></li>
+            <li><a href="#2-element结构体">2. Element结构体</a></li>
+            <li><a href="#21-element操作实现">2.1  Element操作实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#3list结构体">3.List结构体</a>
+          <ul>
+            <li><a href="#31-初始化">3.1 初始化</a></li>
+            <li><a href="#32">3.2</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="golang-container包解析">golang Container包解析</h2>
+<p>container包 包含了共三种数据结构，即：heap，list，ring</p>
+<h3 id="list源码解析">list源码解析</h3>
+<h4 id="1遍历list">1.遍历list</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">l</span><span class="p">.</span><span class="nf">Front</span><span class="p">();</span> <span class="nx">e</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">;</span> <span class="nx">e</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nf">Next</span><span class="p">(){</span>
+  <span class="c1">//do something with e.Value
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="2-element结构体">2. Element结构体</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Element is an element of a linked list.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Element</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// Next and previous pointers in the doubly-linked list of elements.
+</span><span class="c1"></span>	<span class="c1">// To simplify the implementation, internally a list l is implemented
+</span><span class="c1"></span>	<span class="c1">// as a ring, such that &amp;l.root is both the next element of the last
+</span><span class="c1"></span>	<span class="c1">// list element (l.Back()) and the previous element of the first list
+</span><span class="c1"></span>	<span class="c1">// element (l.Front()).
+</span><span class="c1"></span>	<span class="nx">next</span><span class="p">,</span> <span class="nx">prev</span> <span class="o">*</span><span class="nx">Element</span>
+
+	<span class="c1">// The list to which this element belongs.
+</span><span class="c1"></span>	<span class="nx">list</span> <span class="o">*</span><span class="nx">List</span>
+
+	<span class="c1">// The value stored with this element.
+</span><span class="c1"></span>	<span class="nx">Value</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中包含三部分</p>
+<ul>
+<li>
+<p>第一部分为结构体指针，指向上下两个关联节点，因而go中的list是一个<strong>双向链表</strong></p>
+</li>
+<li>
+<p>第二部分是一个list指针，表明这个元素是属于哪个链表，<strong>因而自定义节点无法随意插入已有链表中</strong>。</p>
+</li>
+<li>
+<p>第三部分是数据存储位，存储元素数据，类型为空接口，即泛型。</p>
+</li>
+</ul>
+<h4 id="21-element操作实现">2.1  Element操作实现</h4>
+<p>Next和Prev操作简单来说就是首先将节点指向上下节点，此时判断当前节点对应的list字段是否为空或是否是根节点，若不是则有效返回。</p>
+<h3 id="3list结构体">3.List结构体</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// List represents a doubly linked list.
+</span><span class="c1">// The zero value for List is an empty list ready to use.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">List</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">root</span> <span class="nx">Element</span> <span class="c1">// sentinel list element, only &amp;root, root.prev, and root.next are used
+</span><span class="c1"></span>	<span class="nx">len</span>  <span class="kt">int</span>     <span class="c1">// current list length excluding (this) sentinel element
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>root表示根节点元素，len表示长度</li>
+</ul>
+<h4 id="31-初始化">3.1 初始化</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Init initializes or clears list l.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">Init</span><span class="p">()</span> <span class="o">*</span><span class="nx">List</span> <span class="p">{</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">l</span><span class="p">.</span><span class="nx">root</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">l</span><span class="p">.</span><span class="nx">root</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nx">len</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="k">return</span> <span class="nx">l</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过一个List的指针来调用init函数，首先将其头尾设置为本身，len设为0，并返回该list</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// New returns an initialized list.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">()</span> <span class="o">*</span><span class="nx">List</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">new</span><span class="p">(</span><span class="nx">List</span><span class="p">).</span><span class="nf">Init</span><span class="p">()</span> <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>初始化实际上和New是结合在一起的，list的New函数即通过调用builtin的内建new进行内存分配，创建一个分配zero value的指针，并通过指针调用Init函数完成初始化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// lazyInit lazily initializes a zero List value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">lazyInit</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">next</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">l</span><span class="p">.</span><span class="nf">Init</span><span class="p">()</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此外可以看到源码中还有个lazyInit，其在init之前加了一个判断，来判断是否当前list的next为空。和Init不同在于，Init无论list是否存储数据，都会直接初始化或清空掉引用，而lazyInit会先进行判断再去重置。</p>
+<h4 id="32">3.2</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// insert inserts e after at, increments l.len, and returns e.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">insert</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">at</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="nx">n</span> <span class="o">:=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">next</span>
+	<span class="nx">at</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">e</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">at</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">n</span>
+	<span class="nx">n</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">e</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="p">=</span> <span class="nx">l</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nx">len</span><span class="o">++</span>
+	<span class="k">return</span> <span class="nx">e</span>
+<span class="p">}</span>
+
+<span class="c1">// insertValue is a convenience wrapper for insert(&amp;Element{Value: v}, at).
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">at</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">Element</span><span class="p">{</span><span class="nx">Value</span><span class="p">:</span> <span class="nx">v</span><span class="p">},</span> <span class="nx">at</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// remove removes e from its list, decrements l.len, and returns e.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">remove</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">prev</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">next</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">prev</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="kc">nil</span> <span class="c1">// avoid memory leaks
+</span><span class="c1"></span>	<span class="nx">e</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="kc">nil</span> <span class="c1">// avoid memory leaks
+</span><span class="c1"></span>	<span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="p">=</span> <span class="kc">nil</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nx">len</span><span class="o">--</span>
+	<span class="k">return</span> <span class="nx">e</span>
+<span class="p">}</span>
+
+<span class="c1">// move moves e to next to at and returns e.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">move</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">at</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span> <span class="o">==</span> <span class="nx">at</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">e</span>
+	<span class="p">}</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">prev</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">next</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">prev</span>
+
+	<span class="nx">n</span> <span class="o">:=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">next</span>
+	<span class="nx">at</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">e</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">at</span>
+	<span class="nx">e</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="nx">n</span>
+	<span class="nx">n</span><span class="p">.</span><span class="nx">prev</span> <span class="p">=</span> <span class="nx">e</span>
+
+	<span class="k">return</span> <span class="nx">e</span>
+<span class="p">}</span>
+
+<span class="c1">// Remove removes e from l if e is an element of list l.
+</span><span class="c1">// It returns the element value e.Value.
+</span><span class="c1">// The element must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">Remove</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="o">==</span> <span class="nx">l</span> <span class="p">{</span>
+		<span class="c1">// if e.list == l, l must have been initialized when e was inserted
+</span><span class="c1"></span>		<span class="c1">// in l or l == nil (e is a zero Element) and l.remove will crash
+</span><span class="c1"></span>		<span class="nx">l</span><span class="p">.</span><span class="nf">remove</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">Value</span>
+<span class="p">}</span>
+
+<span class="c1">// PushFront inserts a new element e with value v at the front of list l and returns e.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushFront</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">lazyInit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// PushBack inserts a new element e with value v at the back of list l and returns e.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushBack</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">lazyInit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// InsertBefore inserts a new element e with value v immediately before mark and returns e.
+</span><span class="c1">// If mark is not an element of l, the list is not modified.
+</span><span class="c1">// The mark must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">InsertBefore</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="c1">// see comment in List.Remove about initialization of l
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// InsertAfter inserts a new element e with value v immediately after mark and returns e.
+</span><span class="c1">// If mark is not an element of l, the list is not modified.
+</span><span class="c1">// The mark must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">InsertAfter</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="c1">// see comment in List.Remove about initialization of l
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">mark</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// MoveToFront moves element e to the front of list l.
+</span><span class="c1">// If e is not an element of l, the list is not modified.
+</span><span class="c1">// The element must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveToFront</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="o">||</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">next</span> <span class="o">==</span> <span class="nx">e</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="c1">// see comment in List.Remove about initialization of l
+</span><span class="c1"></span>	<span class="nx">l</span><span class="p">.</span><span class="nf">move</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// MoveToBack moves element e to the back of list l.
+</span><span class="c1">// If e is not an element of l, the list is not modified.
+</span><span class="c1">// The element must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveToBack</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="o">||</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">prev</span> <span class="o">==</span> <span class="nx">e</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="c1">// see comment in List.Remove about initialization of l
+</span><span class="c1"></span>	<span class="nx">l</span><span class="p">.</span><span class="nf">move</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// MoveBefore moves element e to its new position before mark.
+</span><span class="c1">// If e or mark is not an element of l, or e == mark, the list is not modified.
+</span><span class="c1">// The element and mark must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveBefore</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="o">||</span> <span class="nx">e</span> <span class="o">==</span> <span class="nx">mark</span> <span class="o">||</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">move</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// MoveAfter moves element e to its new position after mark.
+</span><span class="c1">// If e or mark is not an element of l, or e == mark, the list is not modified.
+</span><span class="c1">// The element and mark must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveAfter</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="o">||</span> <span class="nx">e</span> <span class="o">==</span> <span class="nx">mark</span> <span class="o">||</span> <span class="nx">mark</span><span class="p">.</span><span class="nx">list</span> <span class="o">!=</span> <span class="nx">l</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">move</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// PushBackList inserts a copy of an other list at the back of list l.
+</span><span class="c1">// The lists l and other may be the same. They must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushBackList</span><span class="p">(</span><span class="nx">other</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">lazyInit</span><span class="p">()</span>
+	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">other</span><span class="p">.</span><span class="nf">Len</span><span class="p">(),</span> <span class="nx">other</span><span class="p">.</span><span class="nf">Front</span><span class="p">();</span> <span class="nx">i</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">e</span> <span class="p">=</span> <span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nf">Next</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// PushFrontList inserts a copy of an other list at the front of list l.
+</span><span class="c1">// The lists l and other may be the same. They must not be nil.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushFrontList</span><span class="p">(</span><span class="nx">other</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">l</span><span class="p">.</span><span class="nf">lazyInit</span><span class="p">()</span>
+	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">other</span><span class="p">.</span><span class="nf">Len</span><span class="p">(),</span> <span class="nx">other</span><span class="p">.</span><span class="nf">Back</span><span class="p">();</span> <span class="nx">i</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">e</span> <span class="p">=</span> <span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nf">Prev</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">l</span><span class="p">.</span><span class="nf">insertValue</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">l</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>付其他源码，重点在于element唯一绑定list，因而个人创建的element如果没有绑定到对应的list，就无法进行插入，需要调用内置insert函数，并且获取element需要调用insert函数获取返回值。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-08-17</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" data-title="golang container包解析" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" data-title="golang container包解析"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" data-title="golang container包解析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/" data-title="golang container包解析"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/go-mod%E8%A7%A3%E6%9E%90/" class="next" rel="next" title="go mod解析">go mod解析<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.79.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nanko</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

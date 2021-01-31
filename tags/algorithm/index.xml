@@ -1,46 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>algorithm on nanko &#39;s blog~</title>
-    <link>/tags/algorithm/</link>
-    <description>Recent content in algorithm on nanko &#39;s blog~</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 04 Aug 2019 22:49:56 +0800</lastBuildDate><atom:link href="/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>leetcode 48.旋转图像</title>
-      <link>/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid>
-      <description>leetcode 48.旋转图像 从线性代数的角度，旋转矩阵有其他解法，此处仅考虑单纯的swap操作实现的旋转图像
-image-20200925165535541
-再看看题目，重点要求原地旋转，换句话说不可以使用额外矩阵来做中间存储再写回，因此直接循环赋值的做法放弃。
-image-20200925165708994
-要求整体顺时针旋转90度，此时我们只考虑单个元素的转移策略。由此三阶矩阵可以分为两层考虑，即最外面一层和5单独的一层，同理考虑二阶矩阵为一层，四阶也为两层，五阶为三层，可以推导公式，level = (n + 1) / 2
-IMG_0269
-所以我们需要每层做个循环，然后每层单独处理。
-再考虑每个层内部的处理方法：IMG_0270
-如图以四阶矩阵为例，旋转即为每个包含四个元素的组进行内部交换，蓝色为一组，红色为一组。
-交换方式即：12换，13换，14换，此时顺序从原先1234变为2341（从左上开始顺时针依次为1234）
-所以我们的问题现在转化为，找到这四个元素的坐标即可。
-我们此时定义，矩阵的阶数为len，层级为lev，每个层内部循环变量为i（如蓝色为lev=0，i=0，红色为lev=0，i=1）
-进而可知，四个点坐标分别为：
- 左上：(lev, lev + i) 右上：(lev + i, len - 1 - lev) 右下：(len - 1 - lev, len - 1 - lev - i) 左下：(len - 1 - lev - i, lev)  至此，此题思路完结，即一层循环，遍历level，二层遍历一个level里面的元素组，即i
-算法时间复杂度O(n * n)
-本题目使用go语言实现，其他语言可借鉴
-1 2 3 4 5 6 7 8 9 10 11  func rotate(matrix [][]int) { lens := len(matrix) levels := (lens + 1) / 2 for lev := 0; lev &amp;lt; levels; lev++ { for i := 0; i &amp;lt; lens-1-lev*2; i++ { matrix[lev][i+lev], matrix[lev+i][lens-1-lev] = matrix[lev+i][lens-1-lev], matrix[lev][i+lev] matrix[lev][i+lev], matrix[lens-lev-1][lens-lev-i-1] = matrix[lens-lev-1][lens-lev-i-1], matrix[lev][i+lev] matrix[lev][i+lev], matrix[lens-lev-i-1][lev] = matrix[lens-lev-i-1][lev], matrix[lev][i+lev] } } }   image-20200925172914506</description>
-    </item>
-    
-    <item>
-      <title>反转链表的n种实现（go）</title>
-      <link>/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/</guid>
-      <description>反转链表的n种实现（go） 一、双指针迭代法 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17  func reverseList(head *ListNode) *ListNode { if head == nil { return nil } else { var tmp *ListNode cur := head.Next pre := head for cur != nil { tmp = cur.Next cur.Next = pre pre = cur cur = tmp } head.Next = nil return pre } }   image-20200921114708051</description>
-    </item>
-    
-  </channel>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>algorithm - 标签 - nanko的快乐小窝</title>
+        <link>https://example.com/tags/algorithm/</link>
+        <description>algorithm - 标签 - nanko的快乐小窝</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>cjq99419@163.com (nanko)</managingEditor>
+            <webMaster>cjq99419@163.com (nanko)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 05 Oct 2020 21:23:56 &#43;0800</lastBuildDate><atom:link href="https://example.com/tags/algorithm/" rel="self" type="application/rss+xml" /><item>
+    <title>Leetcode 206.反转链表</title>
+    <link>https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Mon, 05 Oct 2020 21:23:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[反转链表的n种实现（go） 一、双指针迭代法 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 func reverseList(head *ListNode) *ListNode { if head == nil { return nil } else { var tmp *ListNode cur := head.Next pre := head for cur != nil { tmp = cur.Next]]></description>
+</item><item>
+    <title>Leetcode 48.旋转图像</title>
+    <link>https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link>
+    <pubDate>Sat, 03 Oct 2020 21:23:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid>
+    <description><![CDATA[leetcode 48.旋转图像 从线性代数的角度，旋转矩阵有其他解法，此处仅考虑单纯的swap操作实现的旋转图像 再看看题目，重点要求原地旋转，换句话说不可以]]></description>
+</item></channel>
 </rss>

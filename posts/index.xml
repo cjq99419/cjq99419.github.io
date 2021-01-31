@@ -1,121 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on nanko &#39;s blog~</title>
-    <link>/posts/</link>
-    <description>Recent content in Posts on nanko &#39;s blog~</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 04 Aug 2019 22:49:56 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>golang Container包解析</title>
-      <link>/2019/08/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/</guid>
-      <description>golang Container包解析 container包 包含了共三种数据结构，即：heap，list，ring
-list源码解析 1.遍历list 1 2 3  for e := l.Front(); e != nil; e = e.Next(){ //do something with e.Value }   2. Element结构体 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Element is an element of a linked list. type Element struct { // Next and previous pointers in the doubly-linked list of elements. 	// To simplify the implementation, internally a list l is implemented 	// as a ring, such that &amp;amp;l.</description>
-    </item>
-    
-    <item>
-      <title>leetcode 48.旋转图像</title>
-      <link>/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid>
-      <description>leetcode 48.旋转图像 从线性代数的角度，旋转矩阵有其他解法，此处仅考虑单纯的swap操作实现的旋转图像
-image-20200925165535541
-再看看题目，重点要求原地旋转，换句话说不可以使用额外矩阵来做中间存储再写回，因此直接循环赋值的做法放弃。
-image-20200925165708994
-要求整体顺时针旋转90度，此时我们只考虑单个元素的转移策略。由此三阶矩阵可以分为两层考虑，即最外面一层和5单独的一层，同理考虑二阶矩阵为一层，四阶也为两层，五阶为三层，可以推导公式，level = (n + 1) / 2
-IMG_0269
-所以我们需要每层做个循环，然后每层单独处理。
-再考虑每个层内部的处理方法：IMG_0270
-如图以四阶矩阵为例，旋转即为每个包含四个元素的组进行内部交换，蓝色为一组，红色为一组。
-交换方式即：12换，13换，14换，此时顺序从原先1234变为2341（从左上开始顺时针依次为1234）
-所以我们的问题现在转化为，找到这四个元素的坐标即可。
-我们此时定义，矩阵的阶数为len，层级为lev，每个层内部循环变量为i（如蓝色为lev=0，i=0，红色为lev=0，i=1）
-进而可知，四个点坐标分别为：
- 左上：(lev, lev + i) 右上：(lev + i, len - 1 - lev) 右下：(len - 1 - lev, len - 1 - lev - i) 左下：(len - 1 - lev - i, lev)  至此，此题思路完结，即一层循环，遍历level，二层遍历一个level里面的元素组，即i
-算法时间复杂度O(n * n)
-本题目使用go语言实现，其他语言可借鉴
-1 2 3 4 5 6 7 8 9 10 11  func rotate(matrix [][]int) { lens := len(matrix) levels := (lens + 1) / 2 for lev := 0; lev &amp;lt; levels; lev++ { for i := 0; i &amp;lt; lens-1-lev*2; i++ { matrix[lev][i+lev], matrix[lev+i][lens-1-lev] = matrix[lev+i][lens-1-lev], matrix[lev][i+lev] matrix[lev][i+lev], matrix[lens-lev-1][lens-lev-i-1] = matrix[lens-lev-1][lens-lev-i-1], matrix[lev][i+lev] matrix[lev][i+lev], matrix[lens-lev-i-1][lev] = matrix[lens-lev-i-1][lev], matrix[lev][i+lev] } } }   image-20200925172914506</description>
-    </item>
-    
-    <item>
-      <title>关于go mod和内部包import</title>
-      <link>/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/%E5%85%B3%E4%BA%8Ego-mod%E5%92%8C%E5%86%85%E9%83%A8%E5%8C%85import/</guid>
-      <description>关于go mod和内部包import 编写项目的时候遇到一个问题，即项目a在GOPATH/src中，a下有bc两个文件夹，b中的1.go需要调用c中的2.go。按照传统的import方法，应通过src下的相对路径进行引用。
-1  import &amp;#34;a/c&amp;#34;   但此时如果如此编写，goland会提示无法reslove目录，即找不到对应ac的位置。最先项目没有放在src中，考虑是否因为没有放在GOPATH中导致无法找到，遂将项目转移到src下，问题并未解决。
-考虑是否goland配置有问题，查看全局gopath与项目gopath，并无问题，最终考虑go mod。
-发现关闭go mod之后，能够正常import内部包，但由于项目基于gin框架，草率解决问题显然有些敷衍，所以继续研究go mod的具体效用，最终解决。（初学对go mod等一知半解，问题比较基础）
-1、go mod 关于go mod的系统介绍和官方说明，请借鉴以下文章
- 官方文档 (github) Roberto Selbach  Go mod即go module，是go 1.1.1版本发布的新模块特性，根本目的是为了移除对GOPATH和go get的依赖
-简单来说，是方便把代码放在src之外～
-介绍 module是相关go包的集合，是代码更替和版本控制的单元。模块主要标识为源文件夹下的go.mod文件，此文件目录也成为模块根，其取代了旧的基于src的方法，使用module的模式来指定源文件和导入包。
-go.mod文件解读 go.mod文件定义了module路径和其他需要在build时引入的模块的版本。
-如下创建一个新项目gin-test，通过这个项目来说明go mod的具体细节。
-image-20200730223448694
-首先新建文件夹gin-test 并在文件夹中使用go mod init命令进行模块初始化，注意此时指定了模块名为gin-test-mod。
-打开go.mod文件查看内容：
-image-20200730223644933
-go.mod第一行为模块名，可见模块名为gin-test-mod，之后第三行表示当前go的版本。
-此时使用go get命令去远程拉取gin的相关包
-image-20200730224237324
-可见，go get命令成功拉取到了gin-gonic相关的包，此时再查看go.mod
-image-20200730224412281
-可见此时go.mod中多了一些内容，包括一个require指令和内部一些相关依赖。
-以最后一条举例
-1  gopkg.in/yaml.v2 v2.3.0 //indirect   require命令中，声明module依赖gopkg.in/yaml.v2这个包，同时依赖特定版本，即2.3.0
-其中indirect较为复杂，参看go.mod 文件中的indirect准确含义
-go.mod内部命令 go.mod中除了上述的require命令还有exclude，replace命令，其分别表示排除某些包的特别版本，以及取代当前项目中的某些依赖包。
-1 2 3 4  require other/xxx v1.</description>
-    </item>
-    
-    <item>
-      <title>关于Java与Golang的GC</title>
-      <link>/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/%E5%85%B3%E4%BA%8Ejava%E4%B8%8Egolang%E7%9A%84gc/</guid>
-      <description>关于Java与Golang的GC 本文只做GC方面的一些概述，具体细节请单独看一些优秀blog。
-同时文章内容为个人理解，欢迎评论指责，谢谢！
-一、GC的普遍解决方案   一般来说GC分为两个部分，一部分是找到需要回收的对象，一部分是清除这些对象并执行一些额外操作，如碎片处理。
-  因而本文从标记和清除两个方面来叙述
-  实际上所谓的清除方案如mark-sweep是使用的可达性分析的标记法，但本文将两者分离开讲。在清理部分只单论mark-sweep的清理思想，而不考虑标记细节，此处请注意⚠️
-1、标记 总体来说，分为两大类方法，第一类方法为引用计数，也是最为基础简单的做法。第二类为可达性分析，即Golang包括Java所使用的标记方式
-1.1、引用计数法 引用计数法很好理解，即在对象头部隐式增加一个计数器，通过计数器来计算引用次数。
-如创建一个新对象并赋名，此时即为可引用状态，引用计数器++。
-1  Student stu = new Student();   此时对象的引用为stu，计数器非0，则认定为有效对象。若此时将stu置空。
-1  stu = null;   此时无法再引用到之前创建的对象，即对象存在与内存中，但引用stu已经被抹除，此时该对象计数器清零，可以被回收。
-但仔细思考一下，引用计数法有一些难以解决的问题，如考虑以下场景：类A包含类B的成员变量，同时类B也包含类A，此时分别实例化两个类的对象，并相互引用。此时两个类内部的成员变量都包含对方类的引用，即使此时在主函数中将两个类饮用置为null，两个实例在内存中依然会相互引用。计数器不清零，二者无法调用，也无法被清理。
-preview
-（上图来自 知乎 海纳 GC算法之引用计数）
-所以可能会想到，既然我们考虑GC的根本是可不可以到达，或可不可以通过直接或间接的引用去调用对象，那么我去构建一个引用有向图，做深度或者广度遍历不就知道哪些可以留，哪些没有用了嘛？
-这就是可达性分析的原理～
-1.2、可达性分析 简单来说，就是选取几个可靠的根节点，从根结点开始做遍历，遍历所有可以到达的对象，那么到不了的就视为无效对象，应被GC回收，这种想法就很好的避免了循环引用的问题，像是Java和Go的GC都采用的这种策略。但这种方式也会有一些缺点，和算法一样嘛，照顾了时间就要多花空间，没有完美的算法，只有合适的算法。
-可达性分析的重点在于：如何选择合适的根节点
-我们可以大概看看Java是如何选择的，JVM的GC通常会选择以下四类作为根节点
- VM Stack中引用的对象 方法区中类静态引用的对象 方法区中常量引用的对象 本地方法栈中的Native方法（JNI）  涉及Java内存模型等知识，简单讲解一下
-Java中Running Data Area包含几个区域，如总程序调用需要的栈区，即VM Stack，动态分配的堆区heap，方法区Method Area，还有PCR程序计数器和Native本地方法区。首先栈区为根节点的主要选择区，即在栈中的引用对象需要作为根节点处理。此外，类中的静态引用是作为类属性非对象属性存在，因而具有根节点特性。常量同理，这些都分配在堆区。还有本地方法栈的Native方法，Native方法本质是不在JVM的栈中调用的，而是动态连接在C栈（或其他）中进行处理。此外，Java在处理无法到达节点时，会留有一次生存机会，去判断是否执行finalize()方法，此处不细讲，毕竟不做Java，不是特别了解JVM。
-而Go中的选择就更简单一些，即全局变量和G Stack中的引用指针，简单来说就是全局量和go程中的引用指针。因为Go中没有类的封装概念，因而Gc Root选择也相对简单一些
-可达性分析的具体实现，如怎么去解引用等可深入了解一下，此处不再细解
-1.3 二者对比 引用计数法很好的将标记工作平摊到日常的对象创建引用过程中，在对象引用时直接在头部计数器++即可，扫描阶段直接判断所有的计数器，把为0的清理掉即可。但问题也比较突出，就是循环引用终究无法解决，这样会造成很多无效引用挤占内存空间。但相对来说判定效率高，速度快，GC不会对性能产生较大影响。
-可达性分析相对来说较为准确，能够很好的解决循环引用等问题。但可达性分析最大的问题在于，为了保持对象的一致性，即扫描阶段所有对象状态不可变更，此时需要STW（stop the world）。对于高并发的网络服务，STW无疑是致命的，因而之后也会提到，Go是如何优化这些缺点的。</description>
-    </item>
-    
-    <item>
-      <title>反转链表的n种实现（go）</title>
-      <link>/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Sun, 04 Aug 2019 22:49:56 +0800</pubDate>
-      
-      <guid>/2019/08/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0/</guid>
-      <description>反转链表的n种实现（go） 一、双指针迭代法 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17  func reverseList(head *ListNode) *ListNode { if head == nil { return nil } else { var tmp *ListNode cur := head.Next pre := head for cur != nil { tmp = cur.Next cur.Next = pre pre = cur cur = tmp } head.Next = nil return pre } }   image-20200921114708051</description>
-    </item>
-    
-  </channel>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - nanko的快乐小窝</title>
+        <link>https://example.com/posts/</link>
+        <description>所有文章 | nanko的快乐小窝</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>cjq99419@163.com (nanko)</managingEditor>
+            <webMaster>cjq99419@163.com (nanko)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 06 Jan 2021 20:31:01 &#43;0800</lastBuildDate><atom:link href="https://example.com/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Leetcode 1.两数之和</title>
+    <link>https://example.com/leetcode-1.%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</link>
+    <pubDate>Wed, 06 Jan 2021 20:31:01 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-1.%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</guid>
+    <description><![CDATA[leetcode 1.两数之和 使用map存储已经遍历过的值，key为target - num，即后续需要配对的值，value为值下标。 1 2 3 4 5 6 7 8 9 10 11 12 func]]></description>
+</item><item>
+    <title>关于Java与Golang的GC</title>
+    <link>https://example.com/%E5%85%B3%E4%BA%8Ejava%E5%92%8Cgolang%E7%9A%84gc/</link>
+    <pubDate>Thu, 15 Oct 2020 22:23:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/%E5%85%B3%E4%BA%8Ejava%E5%92%8Cgolang%E7%9A%84gc/</guid>
+    <description><![CDATA[关于Java与Golang的GC 本文只做GC方面的一些概述，具体细节请单独看一些优秀blog。 同时文章内容为个人理解，欢迎评论指责，谢谢！ 一]]></description>
+</item><item>
+    <title>Leetcode 206.反转链表</title>
+    <link>https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Mon, 05 Oct 2020 21:23:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-206.%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[反转链表的n种实现（go） 一、双指针迭代法 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 func reverseList(head *ListNode) *ListNode { if head == nil { return nil } else { var tmp *ListNode cur := head.Next pre := head for cur != nil { tmp = cur.Next]]></description>
+</item><item>
+    <title>Leetcode 48.旋转图像</title>
+    <link>https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</link>
+    <pubDate>Sat, 03 Oct 2020 21:23:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid>
+    <description><![CDATA[leetcode 48.旋转图像 从线性代数的角度，旋转矩阵有其他解法，此处仅考虑单纯的swap操作实现的旋转图像 再看看题目，重点要求原地旋转，换句话说不可以]]></description>
+</item><item>
+    <title>go mod解析</title>
+    <link>https://example.com/go-mod%E8%A7%A3%E6%9E%90/</link>
+    <pubDate>Tue, 04 Aug 2020 22:49:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/go-mod%E8%A7%A3%E6%9E%90/</guid>
+    <description><![CDATA[关于go mod和内部包import 编写项目的时候遇到一个问题，即项目a在GOPATH/src中，a下有bc两个文件夹，b中的1.go需要调用]]></description>
+</item><item>
+    <title>golang container包解析</title>
+    <link>https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/</link>
+    <pubDate>Tue, 04 Aug 2020 22:49:56 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/golang-container%E5%8C%85%E8%A7%A3%E6%9E%90/</guid>
+    <description><![CDATA[golang Container包解析 container包 包含了共三种数据结构，即：heap，list，ring list源码解析 1.遍历list 1 2 3 for]]></description>
+</item></channel>
 </rss>
