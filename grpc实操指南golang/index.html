@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>gRPC实操指南（golang） - nanko的快乐小窝</title><meta name="Description" content="gRPC实操指南（golang）"><meta property="og:title" content="gRPC实操指南（golang）" />
+<meta property="og:description" content="gRPC实操指南（golang）" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" />
+<meta property="og:image" content="https://example.com/logo.png"/>
+<meta property="article:published_time" content="2021-01-31T19:28:05+08:00" />
+<meta property="article:modified_time" content="2021-01-31T19:28:05+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/logo.png"/>
+
+<meta name="twitter:title" content="gRPC实操指南（golang）"/>
+<meta name="twitter:description" content="gRPC实操指南（golang）"/>
+<meta name="application-name" content="nanko &#39;s blog">
+<meta name="apple-mobile-web-app-title" content="nanko &#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" /><link rel="prev" href="https://example.com/leetcode-1.%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "gRPC实操指南（golang）",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang\/"
+        },"image": [{
+                            "@type": "ImageObject",
+                            "url": "https:\/\/example.com\/images\/Apple-Devices-Preview.png",
+                            "width":  3200 ,
+                            "height":  2048 
+                        }],"genre": "posts","keywords": "golang, grpc","wordcount":  6006 ,
+        "url": "https:\/\/example.com\/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang\/","datePublished": "2021-01-31T19:28:05+08:00","dateModified": "2021-01-31T19:28:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/example.com\/images\/avatar.png",
+                    "width":  528 ,
+                    "height":  560 
+                }},"author": {
+                "@type": "Person",
+                "name": "nanko"
+            },"description": "gRPC实操指南（golang）"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于nanko </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="nanko的快乐小窝"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span>nanko的快乐小窝</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于nanko</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">gRPC实操指南（golang）</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nanko</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-01-31">2021-01-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6006 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id="/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" class="leancloud_visitors" data-flag-title="gRPC实操指南（golang）">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#grpc-实操指南golang">gRPC 实操指南（golang）</a>
+      <ul>
+        <li><a href="#1-rpcremote-procedure-call-protocol">1 RPC(Remote Procedure Call Protocol)</a>
+          <ul>
+            <li><a href="#11-什么是rpc">1.1 什么是RPC</a></li>
+            <li><a href="#12-rpc业务场景">1.2 RPC业务场景</a></li>
+            <li><a href="#13-主流rpc框架">1.3 主流RPC框架</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-grpc">2 gRPC</a>
+          <ul>
+            <li><a href="#21-环境配置">2.1 环境配置</a>
+              <ul>
+                <li><a href="#211-首先使用go-get获取grpc的官方软件包">2.1.1 首先使用go get获取grpc的官方软件包</a></li>
+                <li><a href="#212-下载protobuf编译器">2.1.2 下载protobuf编译器</a></li>
+                <li><a href="#213-安装golang编译插件">2.1.3 安装golang编译插件</a></li>
+              </ul>
+            </li>
+            <li><a href="#22-编写proto文件">2.2 编写proto文件</a>
+              <ul>
+                <li><a href="#221-简单rpc">2.2.1 简单RPC</a></li>
+                <li><a href="#222-客户端流rpc">2.2.2 客户端流RPC</a></li>
+                <li><a href="#223-服务端流rpc">2.2.3 服务端流RPC</a></li>
+                <li><a href="#224-双端流rpc">2.2.4 双端流RPC</a></li>
+              </ul>
+            </li>
+            <li><a href="#23-生成go-rpc代码">2.3 生成go rpc代码</a></li>
+            <li><a href="#24-服务端">2.4 服务端</a>
+              <ul>
+                <li><a href="#241-重写server-interface">2.4.1 重写Server interface</a>
+                  <ul>
+                    <li><a href="#2411-简单rpc">2.4.1.1 简单RPC</a></li>
+                    <li><a href="#2412-客户端流rpc">2.4.1.2 客户端流RPC</a></li>
+                    <li><a href="#2413-服务端流rpc">2.4.1.3 服务端流RPC</a></li>
+                  </ul>
+                </li>
+                <li><a href="#242-注册服务">2.4.2 注册服务</a></li>
+              </ul>
+            </li>
+            <li><a href="#25-客户端">2.5 客户端</a>
+              <ul>
+                <li><a href="#251-调用client-func">2.5.1 调用Client func</a>
+                  <ul>
+                    <li><a href="#2511-简单rpc">2.5.1.1 简单RPC</a></li>
+                    <li><a href="#2512-客户端流rpc">2.5.1.2 客户端流RPC</a></li>
+                    <li><a href="#2513-服务端流rpc">2.5.1.3 服务端流RPC</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#3-写在最后">3 写在最后</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="grpc-实操指南golang">gRPC 实操指南（golang）</h2>
+<h3 id="1-rpcremote-procedure-call-protocol">1 RPC(Remote Procedure Call Protocol)</h3>
+<h4 id="11-什么是rpc">1.1 什么是RPC</h4>
+<p>RPC为远程调用协议，简单来说就是调用远程的函数。</p>
+<p>正常单机开发的情况下，我们通过函数的方式实现部分功能的解耦</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">sum</span><span class="p">(</span><span class="nx">num1</span><span class="p">,</span><span class="nx">num2</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">num1</span> <span class="o">+</span> <span class="nx">num2</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如上是一个最简单的求和函数，我们只需要调用函数就可以实现求和的功能。</p>
+<p>但大部分时候函数不会这么简单，尤其对于非单机的分布式系统，远程调用就尤为重要。</p>
+<h4 id="12-rpc业务场景">1.2 RPC业务场景</h4>
+<p>RPC的应用场景特别广泛，不只是单纯的远程调用</p>
+<ul>
+<li>所有的分布式机都需要进行登陆的验证，对于所有的主机都实现相同的登陆验证逻辑维护极差，同时也失去部分分布式意义，所以从解耦的角度考虑，我们需要定义一个统一的登陆验证业务来做。</li>
+<li>C/S架构的传输业务，如股票软件，每天需要用户登陆的时候去服务器拉取最新的数据，或者较简单的文件传输业务，登陆验证业务，证书业务都可以使用rpc的方式</li>
+<li>跨语言开发的项目，比如web业务使用golang进行开发，底层使用cpp或c，部分脚本使用py，跨语言通信可以通过RPC提供的不同语言的开发机制进行实现。</li>
+</ul>
+<p>因而回到最初，<strong>RPC就是一个远程的函数</strong>，只不过RPC协议做的就是把整个过程透明化，配置完成后从开发角度来看，和本地函数调用没有区别。</p>
+<h4 id="13-主流rpc框架">1.3 主流RPC框架</h4>
+<p>目前主流的RPC，有ali的Dubbo，还有google的gRPC（本文主题）等</p>
+<p>一般RPC框架如下所示：</p>
+<ul>
+<li>客户端：客户端作为整个RPC业务的发起者，如上所说的股票软件，需要客户端主动发起请求去拉取最新的股票数据。</li>
+<li>服务端：服务端接受客户端的请求，并做出相应的回应。简单来说，函数实体在服务端，数据处理在服务端。</li>
+</ul>
+<p>服务端和客户端是每个RPC框架，开发者可见度最高的部分，实现RPC业务的重点就在于对C/S的设计和理解。首先，客户端一定是<strong>率先发起请求的部分</strong>，服务端一定是<strong>具体处理请求的部分</strong>。比如之前我们说的求和函数，函数主体一定是在服务端，客户端有两个数字num1，num2，向服务端发起RPC远程调用，并最后拿到求和结果。这样简单的说大家都很清楚，但复杂一些就会很难理解和分辨两者。</p>
+<p>公司业务做的是反向的RPC，即B/S/C架构。用户通过浏览器访问服务器代理，可以实现类似网盘的存取功能，此外还可以绑定客户端，进而在浏览器端实现网盘和客户端FS之间的文件传输。正常的RPC结构是客户端发起请求，而公司业务就是服务端向客户端发起写文件或者读文件的请求，使我迷惑好久。</p>
+<p>因而对于上述业务，我们平台的服务端相当于RPC的客户端，而我们平台的客户端，相当于RPC的服务端。</p>
+<p>（这段一定一定要理解，分清C/S很重要，不然后续会写傻）</p>
+<ul>
+<li>客户端stub，服务端stub，可以变相的理解为应用层。主要是对客户端的rpc调用和服务端的返回进行序列化和反序列化，并进行传输，即把rpc业务抽象成tcp socket的send和receive。（gRPC使用的就是tcp，http2.0协议，建立在传输层）</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rrahdej31440nytdu.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rrahdej31440nytdu.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rrahdej31440nytdu.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rrahdej31440nytdu.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rrahdej31440nytdu.jpg"
+        title="img" /></p>
+<h3 id="2-grpc">2 gRPC</h3>
+<p>gRPC是google的开源RPC框架，引用官网的一句话</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">A</span> <span class="nx">high</span><span class="o">-</span><span class="nx">performance</span><span class="p">,</span> <span class="nx">open</span><span class="o">-</span><span class="nx">source</span> <span class="nx">universal</span> <span class="nx">RPC</span> <span class="nx">framework</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如图，展示了gRPC跨语言开发的结构图，本文将描述golang使用grpc的过程。</p>
+<p>严格来说，grpc通过tcp进行通信，使用http2.0协议，同时使用protobuf定义接口，因而相对于传统的restful api来说，速度更快，数据更小，接口要求更严谨。（protobuf此处不做详细介绍，<a href="https://developers.google.com/protocol-buffers" target="_blank" rel="noopener noreffer">Google Protobuf</a>）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rpia9nj30xc0lv75g.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rpia9nj30xc0lv75g.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rpia9nj30xc0lv75g.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rpia9nj30xc0lv75g.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rpia9nj30xc0lv75g.jpg"
+        title="img" /></p>
+<h4 id="21-环境配置">2.1 环境配置</h4>
+<h5 id="211-首先使用go-get获取grpc的官方软件包">2.1.1 首先使用go get获取grpc的官方软件包</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"> <span class="k">go</span> <span class="nx">get</span> <span class="nx">google</span><span class="p">.</span><span class="nx">golang</span><span class="p">.</span><span class="nx">org</span><span class="o">/</span><span class="nx">grpc</span>
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="212-下载protobuf编译器">2.1.2 下载protobuf编译器</h5>
+<p><a href="https://github.com/protocolbuffers/protobuf/releases" target="_blank" rel="noopener noreffer">protobuf代码生成工具</a>，通过proto文件生成对应的代码。</p>
+<p>（此处需要加入环境变量，各个系统操作不同，不赘述，protoc命令能够正常使用即可）</p>
+<h5 id="213-安装golang编译插件">2.1.3 安装golang编译插件</h5>
+<p>我们需要.proto最终生成可用的golang代码，因而需要独立安装golang grpc的插件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">get</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">golang</span><span class="o">/</span><span class="nx">protobuf</span><span class="o">/</span><span class="nx">protoc</span><span class="o">-</span><span class="nx">gen</span><span class="o">-</span><span class="k">go</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="22-编写proto文件">2.2 编写proto文件</h4>
+<p>protobuf的详细语法见官方文档，此处主要介绍rpc相关的内容</p>
+<p>proto中rpc业务实际上就是一个函数，由服务端重写（overwrite）的函数，一般网上的文章会把gRPC分为四种：简单RPC，服务端流RPC，客户端流RPC，双端流RPC。实际上区别就在于rpc函数的入参和出参，接下来详细介绍一下四种情况，和一般的应用场景。</p>
+<h5 id="221-简单rpc">2.2.1 简单RPC</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="c1">//指定使用proto3（proto2，3有很多不同，不可混写）
+</span><span class="c1"></span><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//指定生成的go_package,简单来说就是生成的go代码使用什么包，即package protocol
+</span><span class="c1"></span><span class="k">option</span> <span class="n">go_package</span> <span class="o">=</span> <span class="s">&#34;.;protocol&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//定义rpc服务
+</span><span class="c1">//此处rpc服务的定义，一定要从服务端的角度考虑，即接受请求，处理请求并返回响应的一端
+</span><span class="c1">//如服务端需要接受请求，根据列出目录的类型和路径列出，并返回文件map
+</span><span class="c1"></span><span class="kd">service</span> <span class="n">ListPath</span><span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="c1">//列出目录服务，入参为ListPathReq，出参为ListPathRes（两者都是下方定义的message）
+</span><span class="c1"></span>    <span class="k">rpc</span> <span class="n">List</span><span class="p">(</span><span class="n">ListPathReq</span><span class="p">)</span><span class="k">returns</span><span class="p">(</span><span class="n">ListPathRes</span><span class="p">){}</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//定义请求的message
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">ListPathReq</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="c1">//枚举类型，即列出全部内容，只列出文件夹，还是只列出文件
+</span><span class="c1"></span>		<span class="c1">//注意这里只是类型定义，相当于内嵌类型定义，而不是变量定义
+</span><span class="c1"></span>    <span class="kd">enum</span> <span class="n">Type</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>        <span class="n">All</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>        <span class="n">Dir</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>        <span class="n">File</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="p">}</span><span class="err">
+</span><span class="err"></span>    <span class="c1">//定义一个Type类型的变量，为type
+</span><span class="c1"></span>    <span class="n">Type</span> <span class="n">type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="c1">//定义一个字符串类型的变量，为path，指定路径
+</span><span class="c1"></span>    <span class="kt">string</span> <span class="n">path</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//定义相应的message
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">ListPathRes</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="c1">//同上
+</span><span class="c1"></span>		<span class="c1">//此处的Type和req的Type不同，由于是内嵌类型，因而作用域为本message，两者不会冲突
+</span><span class="c1"></span>    <span class="kd">enum</span> <span class="n">Type</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>        <span class="n">Dir</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>        <span class="n">File</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="p">}</span><span class="err">
+</span><span class="err"></span>    <span class="kt">string</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="c1">//map类型，为路径和类型的映射
+</span><span class="c1"></span>    <span class="n">map</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="n">Type</span><span class="p">&gt;</span> <span class="n">fileMap</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>上图就是一个简单的RPC业务，功能是列出远程服务器上的文件系统目录。</p>
+<p>为了更方便理解，下述是最简单的求和的rpc service</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="kd">service</span> <span class="n">Abs</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="k">rpc</span> <span class="n">ABS</span><span class="p">(</span><span class="n">SumReq</span><span class="p">)</span><span class="k">returns</span><span class="p">(</span><span class="n">SumRes</span><span class="p">){}</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">message</span> <span class="nc">SumReq</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="kt">int32</span> <span class="n">num1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>		<span class="kt">int32</span> <span class="n">num2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">message</span> <span class="nc">SumRes</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>		<span class="kt">int32</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>即客户端发送SumReq，服务端接到RPC请求后调用sum函数，再封装到SumRes发回。</p>
+<p>简单RPC很好理解，就是一来一回的业务，相当于一个传统函数的功能，常常用于登陆验证，握手协议，简单业务等。</p>
+<p>但实际上业务不会这么简单，比如我的请求或者响应体特别大，肯定不能封装到一个protobuf包进行传输，因而需要使用流式传输，如请求视频资源，或者上传文件等，此时就引出了两种单向流类型，即客户端流和服务端流。</p>
+<h5 id="222-客户端流rpc">2.2.2 客户端流RPC</h5>
+<p>简单来说，就是客户端请求是个流，其他和简单RPC类似。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="k">option</span> <span class="n">go_package</span> <span class="o">=</span> <span class="s">&#34;.;protocol&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">service</span> <span class="n">WriteFile</span><span class="p">{</span><span class="err">
+</span><span class="err"></span>	<span class="c1">//区别就在于此处，rpc函数的入参需要用stream显式表明为流式传输（前面加个stream）
+</span><span class="c1"></span>  <span class="k">rpc</span> <span class="n">Write</span><span class="p">(</span><span class="n">stream</span> <span class="n">WriteFileReq</span><span class="p">)</span><span class="k">returns</span><span class="p">(</span><span class="n">WriteFileRes</span><span class="p">){}</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//message定义相同，等于客户端不停发送很多个WriteFileReq，全部发送完成后，服务端返回一个WriteFileRes
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">WriteFileReq</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">string</span> <span class="n">path</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">int64</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">int64</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">bytes</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">message</span> <span class="nc">WriteFileRes</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">string</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">int64</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="kt">int64</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>这里展示的应用场景为远程写文件，即客户端指定文件路径，数据偏移量和大小，以及传输的二进制数据，打包通过protobuf发送给服务端，服务端不停接受req并写文件，最终写完之后给客户端一个反馈res。</p>
+<p>RPC的流指的是客户端流式发送数据，本质上是分块写的思想。即每个数据包指定路径，偏移和写入大小，同时包含数据内容，每次写一个固定大小的块（如2M），流式指的是流式发送很多个块，如1G为512个2M的块。</p>
+<h5 id="223-服务端流rpc">2.2.3 服务端流RPC</h5>
+<p>同上～</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="k">option</span> <span class="n">go_package</span> <span class="o">=</span> <span class="s">&#34;.;protocol&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">service</span> <span class="n">ReadFile</span><span class="p">{</span><span class="err">
+</span><span class="err"></span>    <span class="k">rpc</span> <span class="n">Read</span><span class="p">(</span><span class="n">ReadFileReq</span><span class="p">)</span><span class="k">returns</span><span class="p">(</span><span class="n">stream</span> <span class="n">ReadFileRes</span><span class="p">){}</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">message</span> <span class="nc">ReadFileReq</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>    <span class="kt">string</span> <span class="n">path</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">int64</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">int64</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kd">message</span> <span class="nc">ReadFileRes</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>    <span class="kt">string</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">int64</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">int64</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>    <span class="kt">bytes</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>理解了客户端流，服务端流也一样的道理，客户端发送一个请求，服务端不停的发送响应，直到全部发送完成。</p>
+<p>上述代码的场景即为远程读取文件，发送一次请求，请求读取某个路径下的文件，比如读取6M大小，从2M的位置开始读，响应即分为三个块，分别包含2-4，4-6，6-8的数据（块大小可以定制，仅以2M举例）。</p>
+<h5 id="224-双端流rpc">2.2.4 双端流RPC</h5>
+<p>双端流RPC就是入参，出参皆为流。一般的应用场景，如聊天室，聊天室需要维持一个长链接，连接过程中双方进行通信，都是流式的信息，类似应用场景使用双端流式的RPC。</p>
+<p>综上，其实分类的四种RPC本质上只是RPC函数在入参和出参上有一些不同，本质上没有太大区别。但go中具体每个rpc业务的复写，针对流式和非流式处理不同，下面会详细描述，golang中如何实现除双端流之外的三种RPC（双端流同理）。</p>
+<h4 id="23-生成go-rpc代码">2.3 生成go rpc代码</h4>
+<p>编写完proto文件就可以通过proto去生成对应的go语言代码了～</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"> protoc --go_out<span class="o">=</span><span class="nv">plugins</span><span class="o">=</span>grpc:. *.proto
+</code></pre></td></tr></table>
+</div>
+</div><p>protoc为编译器的命令，指定使用插件为grpc，输出目录为.（grpc:.）当前目录，待编译文件为*.proto。此处可以指定某个文件编译，也可以指定输出目录，这条命令会编译当前目录下的所有proto文件并生成到当前目录。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqtedmj308606ydfw.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqtedmj308606ydfw.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqtedmj308606ydfw.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqtedmj308606ydfw.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqtedmj308606ydfw.jpg"
+        title="image-20210131172914287" /></p>
+<p>以list path为例子，生成的pb.go，rpc的核心就在Client和Server的两个interface中</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqdij1j324y0lsgpk.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqdij1j324y0lsgpk.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqdij1j324y0lsgpk.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqdij1j324y0lsgpk.jpg 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gn73rqdij1j324y0lsgpk.jpg"
+        title="截屏2021-01-31 下午5.35.55" /></p>
+<p>Client interface</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// ListPathClient is the client API for ListPath service.
+</span><span class="c1">//
+</span><span class="c1">// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ListPathClient</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">in</span> <span class="o">*</span><span class="nx">ListPathReq</span><span class="p">,</span> <span class="nx">opts</span> <span class="o">...</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">CallOption</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">ListPathRes</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Server interface</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// ListPathServer is the server API for ListPath service.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ListPathServer</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">List</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="o">*</span><span class="nx">ListPathReq</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">ListPathRes</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>客户端调用Client interface的方法，服务端重写Server interface的方法</strong></p>
+<p>一定要理解上述这句话！！！！！</p>
+<p>例如这个列出服务器目录的rpc方法，客户端只需要创建客户端实例对象，然后调用这个List方法就可以，传入req，接受res。因而我们说，对于客户端来说，此次调用和本地函数没有区别，但实际上是gRPC实现的远程调用，对于客户端开发是不可见的。</p>
+<p>再说服务端，服务端需要重写Server中的方法，即服务端需要实现Server接口，对req进行处理，并生成res，同时提供ctx上下文用作并发处理。</p>
+<p><strong>综上！！！！客户端是这个函数的调用者，需要调用这个函数，服务端是这个函数的定义者，需要重写这个函数</strong></p>
+<p>这里如果理解了，gRPC就可以用明白了！</p>
+<h4 id="24-服务端">2.4 服务端</h4>
+<p>下述代码皆为伪代码，目的是提供调用或重写的例子和思想，大部分代码是我在公司编写的gPRC程序，删减了很多内容，所以有的地方看起来可能会匪夷所思，但重点是方法的使用和通用的路子。具体可以看官方的例子，google的golang grpc example。</p>
+<h5 id="241-重写server-interface">2.4.1 重写Server interface</h5>
+<h6 id="2411-简单rpc">2.4.1.1 简单RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//使用空结构体就可，主要目的是为了实现Server interface，需要参数也可传递
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ListServer</span> <span class="kd">struct</span><span class="p">{}</span>
+<span class="c1">//实现List方法，接受req，返回res
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">ListServer</span><span class="p">)</span> <span class="nf">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">ListPathReq</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">ListPathRes</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">//处理req
+</span><span class="c1"></span>  	<span class="c1">//对于列出目录，就是调用os的相关函数，通过req的参数列出
+</span><span class="c1"></span>  	<span class="c1">//装填生成res
+</span><span class="c1"></span>  	<span class="k">return</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">err</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h6 id="2412-客户端流rpc">2.4.1.2 客户端流RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//同理
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">WriteServer</span> <span class="kd">struct</span><span class="p">{}</span>
+<span class="c1">//流式不通过函数返回，需要通过server对象进行操作
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><span class="nx">WriteServer</span><span class="p">)</span> <span class="nf">Write</span><span class="p">(</span><span class="nx">write</span> <span class="nx">WriteFile_WriteServer</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+    <span class="c1">//接受一条req
+</span><span class="c1"></span>		<span class="nx">req</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">write</span><span class="p">.</span><span class="nf">Recv</span><span class="p">()</span>
+    <span class="c1">//条件判断，当EOF或XXX等情况下，认定完成
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span> <span class="o">||</span> <span class="nx">req</span><span class="p">.</span><span class="nx">Size</span> <span class="p">&lt;</span> <span class="nx">blockSize</span> <span class="p">{</span>
+      <span class="c1">//完成流式，即服务端认为客户端发送了一堆包，已经完成了
+</span><span class="c1"></span>      <span class="c1">//调用函数，发送res（WriteFile函数的返回为WriteFileRes）
+</span><span class="c1"></span>			<span class="k">return</span> <span class="nx">write</span><span class="p">.</span><span class="nf">SendAndClose</span><span class="p">(</span><span class="nf">WriteFile</span><span class="p">(</span><span class="nx">req</span><span class="p">))</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+    <span class="c1">//针对于每个包，都需要执行一次写文件，res没用扔掉
+</span><span class="c1"></span>		<span class="nx">_</span> <span class="p">=</span> <span class="nf">WriteFile</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>实际上述代码有些问题，最初WriteFile函数设计的时候，是类似于一问一答的形式，即有点像双向流，每次分块写都会有返回结果。但考虑到过多返回意义不大，因而使用客户端流，只保留了最后一次的返回，之前的返回直接丢弃掉。</p>
+<h6 id="2413-服务端流rpc">2.4.1.3 服务端流RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">ReadServer</span><span class="p">)</span> <span class="nf">Read</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">protocol</span><span class="p">.</span><span class="nx">ReadFileReq</span><span class="p">,</span> <span class="nx">read</span> <span class="nx">protocol</span><span class="p">.</span><span class="nx">ReadFile_ReadServer</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="c1">//处理req
+</span><span class="c1"></span>  <span class="c1">//此处简化写了，每次调用send函数去发送一条res，直到退出函数，发送停止，即传输完成
+</span><span class="c1"></span>	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">read</span><span class="p">.</span><span class="nf">Send</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ReadFileRes</span><span class="p">{});</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="242-注册服务">2.4.2 注册服务</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">GRPCWorker</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//设置端口
+</span><span class="c1"></span>	<span class="nx">port</span> <span class="o">:=</span> <span class="s">&#34;:6012&#34;</span>
+  <span class="c1">//创建监听listen，指定tcp和监听端口
+</span><span class="c1"></span>	<span class="nx">lis</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nf">Listen</span><span class="p">(</span><span class="s">&#34;tcp&#34;</span><span class="p">,</span> <span class="nx">port</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;failed to listen: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	
+  <span class="c1">//创建新的grpc服务
+</span><span class="c1"></span>	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">()</span>
+  
+  <span class="c1">//注册服务，后续传入的结构体为实现了Server接口的结构体地址
+</span><span class="c1"></span>	<span class="nx">protocol</span><span class="p">.</span><span class="nf">RegisterCreateDirServer</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">CreateServer</span><span class="p">{})</span>
+	<span class="nx">protocol</span><span class="p">.</span><span class="nf">RegisterListPathServer</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">ListServer</span><span class="p">{})</span>
+	<span class="nx">protocol</span><span class="p">.</span><span class="nf">RegisterReadFileServer</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">ReadServer</span><span class="p">{})</span>
+	<span class="nx">protocol</span><span class="p">.</span><span class="nf">RegisterWriteFileServer</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">WriteServer</span><span class="p">{})</span>
+  
+  <span class="c1">//反射注册grpc服务
+</span><span class="c1"></span>	<span class="nx">reflection</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+  
+  <span class="c1">//启动服务，指定lis监听
+</span><span class="c1"></span>	<span class="k">go</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Serve</span><span class="p">(</span><span class="nx">lis</span><span class="p">)</span>
+  
+  <span class="c1">//通过上下文判定是否退出
+</span><span class="c1"></span>	<span class="k">select</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述代码是包含了ctx上下文的写法，即当ctx退出的时候，停止服务并return。</p>
+<h4 id="25-客户端">2.5 客户端</h4>
+<h5 id="251-调用client-func">2.5.1 调用Client func</h5>
+<h6 id="2511-简单rpc">2.5.1.1 简单RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//函数随便定义，重点是对grpc的调用
+</span><span class="c1">//伪代码，重点是理解
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">ClientService</span><span class="p">)</span> <span class="nf">ListPath</span><span class="p">(</span><span class="nx">xxx</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c1">//创建grpc连接，注意ip和port之间要有:
+</span><span class="c1"></span>	  <span class="nx">grpcConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">Dial</span><span class="p">(</span><span class="s">&#34;127.0.0.1:6012&#34;</span><span class="p">,</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">WithInsecure</span><span class="p">())</span>		
+		<span class="c1">//创建一个新的客户端对象
+</span><span class="c1"></span>		<span class="nx">client</span> <span class="o">:=</span> <span class="nx">protocol</span><span class="p">.</span><span class="nf">NewListPathClient</span><span class="p">(</span><span class="nx">grpcConn</span><span class="p">)</span>
+  	<span class="c1">//设置ctx
+</span><span class="c1"></span>		<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nf">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">(),</span> <span class="mi">10</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="k">defer</span> <span class="nf">cancel</span><span class="p">()</span>
+		<span class="c1">//调用List
+</span><span class="c1"></span>  	<span class="c1">//核心就在于此处的调用，客户端只需要通过client对象调用Client interface中的func就可
+</span><span class="c1"></span>		<span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">List</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">protocol</span><span class="p">.</span><span class="nx">ListPathReq</span><span class="p">{})</span>
+		<span class="c1">//处理res和err
+</span><span class="c1"></span>		<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>	
+</code></pre></td></tr></table>
+</div>
+</div><p>所以，客户端只需要维持一个实例化的client对象，通过client调用方法就可以使用RPC服务，注意和服务端不同的是，每个服务都需要一个客户端，即服务端是在一个对象上注册很多个服务，而客户端调用每个RPC业务都需要一个对应函数的Client对象。</p>
+<h6 id="2512-客户端流rpc">2.5.1.2 客户端流RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">ClientService</span><span class="p">)</span> <span class="nf">WriteFile</span><span class="p">(</span><span class="nx">xxx</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+		<span class="c1">//创建client对象，同上
+</span><span class="c1"></span>  	<span class="nx">client</span> <span class="o">:=</span> <span class="nx">protocol</span><span class="p">.</span><span class="nf">NewWriteFileClient</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">conn</span><span class="p">)</span>
+		<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nf">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">(),</span> <span class="mi">10</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="k">defer</span> <span class="nf">cancel</span><span class="p">()</span>
+		<span class="c1">//创建流式写对象
+</span><span class="c1"></span>		<span class="nx">writeClient</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">i18n</span><span class="p">.</span><span class="nf">ImperceptibleErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="k">for</span> <span class="p">{</span>
+      <span class="c1">//在循环中通过写对象进行数据发送
+</span><span class="c1"></span>			<span class="nx">err</span> <span class="p">=</span> <span class="nx">writeClient</span><span class="p">.</span><span class="nf">Send</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">protocol</span><span class="p">.</span><span class="nx">WriteFileReq</span><span class="p">{</span>
+				<span class="nx">Path</span><span class="p">:</span>   <span class="nx">path</span><span class="p">,</span>
+				<span class="nx">Offset</span><span class="p">:</span> <span class="nx">offset</span><span class="p">,</span>
+				<span class="nx">Size</span><span class="p">:</span>   <span class="nb">int64</span><span class="p">(</span><span class="nx">n</span><span class="p">),</span>
+				<span class="nx">Data</span><span class="p">:</span>   <span class="nx">data</span><span class="p">,</span>
+			<span class="p">})</span>
+      <span class="c1">//满足某个条件跳出循环
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="o">!=</span> <span class="nx">blockSize</span> <span class="p">{</span>
+				<span class="k">break</span>
+			<span class="p">}</span>
+			<span class="nx">offset</span> <span class="o">+=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+		<span class="p">}</span>
+  	<span class="c1">//关闭并接收服务端的返回
+</span><span class="c1"></span>		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">writeClient</span><span class="p">.</span><span class="nf">CloseAndRecv</span><span class="p">()</span>
+		<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h6 id="2513-服务端流rpc">2.5.1.3 服务端流RPC</h6>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">ClientService</span><span class="p">)</span> <span class="nf">ReadFile</span><span class="p">(</span><span class="nx">xxx</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+  	<span class="c1">//创建read客户端
+</span><span class="c1"></span>		<span class="nx">readClient</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">protocol</span><span class="p">.</span><span class="nx">ReadFileReq</span><span class="p">{})</span>
+    <span class="k">for</span> <span class="p">{</span>
+      <span class="c1">//循环读取
+</span><span class="c1"></span>      <span class="nx">rev</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">readClient</span><span class="p">.</span><span class="nf">Recv</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="o">!=</span> <span class="nx">blockSize</span> <span class="p">{</span>
+        <span class="c1">//log.Println(&#34;grpc读取完成&#34;)
+</span><span class="c1"></span>        <span class="k">return</span> <span class="kc">nil</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="3-写在最后">3 写在最后</h3>
+<p>学习grpc的起因是因为公司需要的远程读写文件业务，调研后采用gRPC实现。由于公司的业务是反向rpc，即我们业务的服务端向客户端发请求，去写文件或者读文件，因而第一天看了一天，一直迷茫于重写调用的部分。让我觉得最迷惑的部分就是，越看越乱，以至于后来根本分不清C/S，照着网上的blog各种尝试，企图碰运气成功RPC，自然不可能。</p>
+<p>所以建议一定要彻底理解，2.2 2.3的内容，不要一味看代码，抄代码，这也是用删减后杂乱的业务代码，也没直接发官方例子的原因。一定要先理解！！！！！祝学习愉快～</p>
+<p>vx：cjq99419 欢迎提问和批评指正，第一次写这种大篇幅一些的文章，结构什么的可能会比较乱，感谢指导！</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-01-31</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" data-title="gRPC实操指南（golang）" data-hashtags="golang,grpc"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" data-title="gRPC实操指南（golang）"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" data-title="gRPC实操指南（golang）"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/" data-title="gRPC实操指南（golang）"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a>,&nbsp;<a href="/tags/grpc/">grpc</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/leetcode-1.%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="prev" rel="prev" title="Leetcode 1.两数之和"><i class="fas fa-angle-left fa-fw"></i>Leetcode 1.两数之和</a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.79.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nanko</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
