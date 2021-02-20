@@ -4,9 +4,16 @@
         <link>https://example.com/</link>
         <description>关于 LoveIt 主题</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>cjq99419@163.com (nanko)</managingEditor>
-            <webMaster>cjq99419@163.com (nanko)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 31 Jan 2021 19:28:05 &#43;0800</lastBuildDate>
+            <webMaster>cjq99419@163.com (nanko)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 01 Feb 2021 18:00:46 &#43;0800</lastBuildDate>
             <atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>leetcode 2.两数相加</title>
+    <link>https://example.com/leetcode-2.%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</link>
+    <pubDate>Mon, 01 Feb 2021 18:00:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://example.com/leetcode-2.%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</guid>
+    <description><![CDATA[leetcode 2.两数相加 需要对两个逆序的非空数字进行求和，重点在于两个整数长度不固定。 由于是逆序存储，所以实际上链表第一位并不对其，比如32 + 234，]]></description>
+</item><item>
     <title>gRPC实操指南（golang）</title>
     <link>https://example.com/grpc%E5%AE%9E%E6%93%8D%E6%8C%87%E5%8D%97golang/</link>
     <pubDate>Sun, 31 Jan 2021 19:28:05 &#43;0800</pubDate>
@@ -40,7 +47,7 @@
     <pubDate>Sat, 03 Oct 2020 21:23:56 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://example.com/leetcode-48.%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/</guid>
-    <description><![CDATA[leetcode 48.旋转图像 从线性代数的角度，旋转矩阵有其他解法，此处仅考虑单纯的swap操作实现的旋转图像 再看看题目，重点要求原地旋转，换句话说不可以]]></description>
+    <description><![CDATA[leetcode 48.旋转图像 重点要求原地旋转，即不可以使用额外矩阵来做中间存储再写回，因此直接循环赋值的做法放弃。 要求整体顺时针旋转90度，此时我们只考]]></description>
 </item><item>
     <title>go mod解析</title>
     <link>https://example.com/go-mod%E8%A7%A3%E6%9E%90/</link>

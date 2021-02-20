@@ -34,7 +34,7 @@
                             "url": "https:\/\/example.com\/images\/Apple-Devices-Preview.png",
                             "width":  3200 ,
                             "height":  2048 
-                        }],"genre": "posts","keywords": "golang, java","wordcount":  3923 ,
+                        }],"genre": "posts","keywords": "golang, java","wordcount":  5990 ,
         "url": "https:\/\/example.com\/%E5%85%B3%E4%BA%8Ejava%E5%92%8Cgolang%E7%9A%84gc\/","datePublished": "2020-10-15T22:23:56+08:00","dateModified": "2020-10-15T22:23:56+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": {
@@ -89,8 +89,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">关于Java与Golang的GC</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nanko</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/golang/"><i class="far fa-folder fa-fw"></i>golang</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-15">2020-10-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3923 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-15">2020-10-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5990 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -117,7 +117,24 @@
             <li><a href="#25-三色标记法">2.5 三色标记法</a></li>
           </ul>
         </li>
-        <li><a href="#二java垃圾回收机制">二、Java垃圾回收机制</a></li>
+        <li><a href="#二java垃圾回收机制">二、Java垃圾回收机制</a>
+          <ul>
+            <li><a href="#1java分代策略">1、Java分代策略</a></li>
+            <li><a href="#2java-gc简要过程">2、Java GC简要过程</a></li>
+            <li><a href="#3对象转移策略">3、对象转移策略</a></li>
+          </ul>
+        </li>
+        <li><a href="#三golang垃圾回收机制">三、Golang垃圾回收机制</a>
+          <ul>
+            <li><a href="#1标记-清除法v13之前">1、标记-清除法（v1.3之前）</a></li>
+            <li><a href="#2标记-stw-清除法v13">2、标记-STW-清除法（v1.3）</a></li>
+            <li><a href="#3三色标记法v15之后">3、三色标记法（v1.5之后）</a></li>
+            <li><a href="#31-dijkstra插入屏障">3.1 Dijkstra插入屏障</a></li>
+            <li><a href="#32--yuasa删除屏障">3.2  Yuasa删除屏障</a></li>
+            <li><a href="#33-混合写屏障v18之后">3.3 混合写屏障（v1.8之后）</a></li>
+          </ul>
+        </li>
+        <li><a href="#四总结">四、总结</a></li>
       </ul>
     </li>
   </ul>
@@ -162,10 +179,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjst25ecywj30sl0dzgm5.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjst25ecywj30sl0dzgm5.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjst25ecywj30sl0dzgm5.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjst25ecywj30sl0dzgm5.jpg 2x"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i8aqa2j30sl0dzt96.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i8aqa2j30sl0dzt96.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i8aqa2j30sl0dzt96.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i8aqa2j30sl0dzt96.jpg 2x"
         data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjst25ecywj30sl0dzgm5.jpg"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i8aqa2j30sl0dzt96.jpg"
         title="preview" /></p>
 <p>（上图来自 <a href="https://zhuanlan.zhihu.com/p/27939756" target="_blank" rel="noopener noreffer">知乎 海纳 GC算法之引用计数</a>）</p>
 <p>所以可能会想到，既然我们考虑GC的根本是可不可以到达，或可不可以通过直接或间接的引用去调用对象，那么我去构建一个引用有向图，做深度或者广度遍历不就知道哪些可以留，哪些没有用了嘛？</p>
@@ -196,10 +213,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuiod0agxj30h805hjsh.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuiod0agxj30h805hjsh.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuiod0agxj30h805hjsh.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuiod0agxj30h805hjsh.jpg 2x"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7iaez34j30h805h0st.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7iaez34j30h805h0st.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7iaez34j30h805h0st.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7iaez34j30h805h0st.jpg 2x"
         data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuiod0agxj30h805hjsh.jpg"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7iaez34j30h805h0st.jpg"
         title="preview" /></p>
 <p>上文也提过，实际上mark-sweep使用的可达性分析，即根节点扫描的方式，但此处仅仅讲清理过程。</p>
 <p>mark-sweep是最基础简单的清理办法，即标记需要回收的节点，然后清除节点即可。但这种做法明显有很多问题，即产生较多的内存碎片。因而这种算法大部分情况下需要改进使用！</p>
@@ -207,20 +224,20 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuioa5gahj30h8054wfe.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuioa5gahj30h8054wfe.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuioa5gahj30h8054wfe.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuioa5gahj30h8054wfe.jpg 2x"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7idarorj30h80543yk.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7idarorj30h80543yk.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7idarorj30h80543yk.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7idarorj30h80543yk.jpg 2x"
         data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuioa5gahj30h8054wfe.jpg"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7idarorj30h80543yk.jpg"
         title="img" /></p>
 <p>复制算法就要机智一些，把内存分割成两个相同的区域，每次只使用一半。当发生GC的时候，会把其中一块中的存活对象复制到另一块内存中，原先内存清空。这种方法相对来说不会产生大量的内存碎片，但问题在于变相减半了内存空间，这显然也是无法接受的。同时如果GC比较频繁的话，会涉及到大量的内存复制，降低性能。</p>
 <h4 id="23-mark-compact">2.3 mark-compact</h4>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuisqaopoj30h806iglp.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuisqaopoj30h806iglp.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuisqaopoj30h806iglp.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjuisqaopoj30h806iglp.jpg 2x"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7ibfxwsj30h806iglp.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7ibfxwsj30h806iglp.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7ibfxwsj30h806iglp.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7ibfxwsj30h806iglp.jpg 2x"
         data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjuisqaopoj30h806iglp.jpg"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7ibfxwsj30h806iglp.jpg"
         title="img" /></p>
 <p>和mark-sweep比较相似，但是其多了一步整理的过程，即将存活对象全部左移，再清理可回收对象。这种方法有效的避免了内存碎片的产生，同时也不会像复制算法变相减小内存空间，但需要频繁的内存移动操作，对性能也有一定的影响。</p>
 <h4 id="24-分代策略">2.4 分代策略</h4>
@@ -233,46 +250,87 @@
 </li>
 </ul>
 <h3 id="二java垃圾回收机制">二、Java垃圾回收机制</h3>
-<p>上文提到了，Java使用的是分代策略，分代策略的最大好处就是因地制宜，根据对象不同情况选择不同解决方案。</p>
+<h4 id="1java分代策略">1、Java分代策略</h4>
+<p>Java使用的是分代策略，分代策略的最大好处就是因地制宜，根据对象不同情况选择不同解决方案。</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjujd1rqakj30h806et9r.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjujd1rqakj30h806et9r.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjujd1rqakj30h806et9r.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjujd1rqakj30h806et9r.jpg 2x"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7icdipoj30h806et8t.jpg"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7icdipoj30h806et8t.jpg, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7icdipoj30h806et8t.jpg 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7icdipoj30h806et8t.jpg 2x"
         data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjujd1rqakj30h806et9r.jpg"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7icdipoj30h806et8t.jpg"
         title="img" /></p>
 <p>线程共享方法区和堆区，主要动态创建都在堆上，因而堆也是主要的回收空间。</p>
-<p>JVM将堆区分为两个部分，新生代和老年代，听名字就可以知道，新生代存新对象，老年代存老对象，但具体的抉择调度很复杂。</p>
-<p>堆空间三分之一为新生代，初始创建的绝大部分对象都在新生代，而新生代又分为三个区域，分别是4/5的Eden区，和两个1/10的交替区，图中称from，to区，导致我最开始有些迷惑 ，从哪来？到哪去？但实际上可以理解为，两个区一模一样，有的文章会把他们叫做S0和S1，或者其他叫法，但实际上这两个区交替使用，没有差别。</p>
+<p>JVM将堆区分为两个部分，新生代和老年代，新生代存新对象，老年代存老对象，但具体的抉择调度很复杂。</p>
+<p>堆空间三分之一为新生代，初始创建的绝大部分对象都在新生代，而新生代又分为三个区域，分别是4/5的Eden区，和两个1/10的交替区，图中称from，to区，实际上可以理解为，两个区一模一样，有的文章会把他们叫做S0和S1，或者其他叫法，但实际上这两个区交替使用，没有差别。</p>
+<h4 id="2java-gc简要过程">2、Java GC简要过程</h4>
 <p>每次执行Minor GC，都会清理新生代区域，具体做法是：</p>
 <p>每次创建对象都在Eden区中，如当前from区包含上次GC都剩余存活对象，则此次GC清理Eden区和from区，将两个区中所有的存活对象转移到to区中，并清空Eden区和from区。下次GC则将Eden和to的存活对象，转移到from。这样就很清晰了，实际上这是一种复制算法的改进策略，即不直接进行二分分块，而是用Eden做缓冲。当然这种做法的前提是，新生代98%的对象都是创建即销毁的，可以理解为挺不过一次GC，所以虽然每次存活对象最大区域才是新生代的1/10，但空间也是足够使用的。同时如果空间不够，会有其他策略进行处理，往老年代转移。</p>
-<p>好处就是不会产生内存碎片，而且由于使用复制算法，存活对象比例较低，性能也较强，但需要注意，这些操作都是在STW的前提下的，即执行GC需要挂起所有线程去清理堆区。而Minor GC速度较快，STW时间极短，因而几乎无法察觉，但在高并发的网络服务面前，这就是一个致命的缺点，这也是Go不是用分代策略，使用三色标记法的根本原因之一。</p>
+<p>好处就是不会产生内存碎片，而且由于使用复制算法，存活对象比例较低，性能也较强，但需要注意，这些操作都是在STW的前提下的，即执行GC需要挂起所有线程去清理堆区。而Minor GC速度较快，STW时间极短，因而几乎无法察觉。但在高并发的网络服务面前，这就是一个致命的缺点，这也是Go不是用分代策略，使用三色标记法的根本原因之一。</p>
 <ul>
 <li>Minor GC 清理新生代</li>
 <li>Major GC 清理老年代</li>
 <li>Full GC 全清</li>
 </ul>
+<h4 id="3对象转移策略">3、对象转移策略</h4>
 <p>而实际上，当from或to区不足以存储的时候，JVM就会将对象转移到老年代，此外当对象存活过15次GC后也会被送入老年代，一些大对象，如超长字符串数组也会被直接安排到老年代，而不会在新生代中频繁GC复制。</p>
-<p>当执行一次Minor GC后，会根据之前每次Minor GC转移到老年代的对象空间进行判断，如老年代还剩1MB的空间，但之前每次Minor GC平均会将2MB的对象送入老年代，这时JVM就会出现担保风险，即它无法担保老年代剩余空间足够应付Minor GC转移过来的对象，所以此时会进行一次Major GC以释放老年代的空间。但可能这次只转移1KB的对象，但由于担保机制，JVM还是会执行Major GC。此外，如果担保成功，但</p>
+<p>当执行一次Minor GC后，会根据之前每次Minor GC转移到老年代的对象空间进行判断，如老年代还剩1MB的空间，但之前每次Minor GC平均会将2MB的对象送入老年代，这时JVM就会出现担保风险，即它无法担保老年代剩余空间足够应付Minor GC转移过来的对象，所以此时会进行一次Major GC以释放老年代的空间。但可能这次只转移1KB的对象，但由于担保机制，JVM还是会执行Major GC。</p>
+<h3 id="三golang垃圾回收机制">三、Golang垃圾回收机制</h3>
+<h4 id="1标记-清除法v13之前">1、标记-清除法（v1.3之前）</h4>
+<p>初代的golang垃圾回收机制非常简陋，即<strong>go runtime在一定条件下（主动或被动），暂停所有任务（STW），执行mark&amp;sweep操作</strong>，执行完清理过程后再启动任务的执行。在需要回收较多废弃对象的时候，会出现较<strong>长时间的STW停顿</strong>。go设计初衷便是为了支持CSP模型下的并发任务处理，同时原生高程度的web支持也使其适用于应对轻量级web服务的搭建，因而v1.3之前的STW对于高并发网络服务是难以忍受的，因而只能通过控制内存分配数量，或手动管理来解决高并发场景，golang针对这一问题在后续不断的进行了改进。</p>
+<h4 id="2标记-stw-清除法v13">2、标记-STW-清除法（v1.3）</h4>
+<p>实际使用STW的原因在于，<strong>需要在标记阶段去扫描所有对象</strong>，以分辨是否需要回收。如果此时不作限制，放任程序变更对象状态，便会导致错误的gc。而清除阶段由于不再需要扫描整个程序的对象状态，因而实际上在清除阶段是不需要STW的，所以<strong>在v1.3版本，go runtime分离了mark和sweep的操作，mark期间执行STW，结束后并发执行gc和其他业务逻辑</strong>。同时如果存在多核处理器，go会试图使用额外的核心处理gc，尽量不影响业务代码的运行。</p>
+<h4 id="3三色标记法v15之后">3、三色标记法（v1.5之后）</h4>
+<p>此时，golang的gc是“<strong>非分代的、非移动的、并发的、三色的</strong>标记清除垃圾回收器”，这种gc方式简称三色标记法。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i94ip6g30k00gr41p.gif"
+        data-srcset="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i94ip6g30k00gr41p.gif, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i94ip6g30k00gr41p.gif 1.5x, https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i94ip6g30k00gr41p.gif 2x"
+        data-sizes="auto"
+        alt="https://tva1.sinaimg.cn/large/008eGmZEly1gnu7i94ip6g30k00gr41p.gif"
+        title="img" /></p>
+<p><strong>（来自 维基百科）</strong></p>
+<p><strong>三色标记法大体过程</strong>如下：</p>
+<ol>
+<li>创建白，灰，黑三个集合，并将所有对象放入白色集合</li>
+<li>从根节点遍历对象（非递归，类似广度优先），将遍历到的对象转移到灰色集合</li>
+<li>遍历灰色对象，将引用对象转移到灰色集合，原灰色对象转移到黑色集合，重复直至无灰色对象</li>
+<li>通过写屏障检测对象变化（稍后详细解释）</li>
+<li>清理白色对象</li>
+</ol>
+<p>三色标记法易于实现并发回收，即在程序运行的同时进行gc，不需要长时间暂停整个程序。这种mark操作可以渐进执行而不需要每次扫描整个内存，有效减少STW时间。</p>
+<p>但此时也会有很多问题存在，当同时出现以下情况，就会出现错误的gc：</p>
 <ul>
-<li><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtflj339yj30ko0nrdsr.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtflj339yj30ko0nrdsr.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjtflj339yj30ko0nrdsr.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjtflj339yj30ko0nrdsr.jpg 2x"
-        data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtflj339yj30ko0nrdsr.jpg"
-        title="image-20201018133959789" /></li>
-<li><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtfm4jhrtj30l90n47fu.jpg"
-        data-srcset="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtfm4jhrtj30l90n47fu.jpg, https://tva1.sinaimg.cn/large/007S8ZIlly1gjtfm4jhrtj30l90n47fu.jpg 1.5x, https://tva1.sinaimg.cn/large/007S8ZIlly1gjtfm4jhrtj30l90n47fu.jpg 2x"
-        data-sizes="auto"
-        alt="https://tva1.sinaimg.cn/large/007S8ZIlly1gjtfm4jhrtj30l90n47fu.jpg"
-        title="image-20201018134033980" /></li>
+<li>变更引用，导致白色对象被黑色对象引用</li>
+<li>破坏引用，导致白色对象与灰色对象的可达性关系被破坏</li>
 </ul>
+<p>此时白色对象本质上是存活对象，但由于无法再被扫描到，所以会被误清除。因而我们需要一些额外的机制，在尽量少的STW的前提下，保证gc的准确性和可靠性。</p>
+<p>其实主要的问题就在于对象<strong>引用状态的变更</strong>，只要破坏以上某一点，就可以保证回收的稳定性</p>
+<h4 id="31-dijkstra插入屏障">3.1 Dijkstra插入屏障</h4>
+<p>在增加引用的时候，如果某个对象被引用，则需放入灰色集合，而不能放入白色集合。这样就保证无论如何，不会出现黑色引用白色的情况。</p>
+<p>但插入屏障存在两个问题：</p>
+<ol>
+<li>插入屏障在一次回收过程中可能会有残留对象存在，导致删除引用后，对象直到下一次gc才能被回收。</li>
+<li>在标记阶段，每次的引用插入操作都需要调用插入屏障，进而导致性能下降。因而go团队将插入屏障应用到了堆区的回收中，栈中使用原三色标记法。这就导致为了gc的准确性，需要在完成标记时启动STW对栈区再次扫描。</li>
+</ol>
+<h4 id="32--yuasa删除屏障">3.2  Yuasa删除屏障</h4>
+<p>在删除引用的时候，如果被删除的对象自身为白色或灰色，会被标记为灰色。这就保持删除引用时，始终保持一条灰色可达的通路，进而不会出现破坏引用，导致白色对象不可达的情况。但回收精度不高，对象即使被删除，引用指针依然可以存活一轮。GC开始时需要STW扫描堆栈来记录初始快照，从而保护初始状态下的存活对象。</p>
+<h4 id="33-混合写屏障v18之后">3.3 混合写屏障（v1.8之后）</h4>
+<p>混合写屏障结合两者特点，通过以下方式实现并发稳定的gc：</p>
+<ol>
+<li>将栈上的对象全部扫描并标记为黑色</li>
+<li>GC期间，任何在栈上创建的新对象，均为黑色。</li>
+<li>被删除的对象标记为灰色。</li>
+<li>被添加的对象标记为灰色。</li>
+</ol>
+<p>由于要保证栈的运行效率，混合写屏障是针对于堆区使用的。即栈区不会出发写屏障，只有堆区触发，由于栈区初始标记的可达节点均为黑色节点，因而也不需要第二次STW下的扫描。本质上是融合了插入屏障和删除屏障的特点，解决了插入屏障需要二次扫描的问题。同时针对于堆区和栈区采用不同的策略，保证栈的运行效率不受损。</p>
+<p>此时golang包含混合写屏障的并发三色标记法正式形成，“<strong>非分代的、非移动的、并发的、三色的</strong>标记清除垃圾回收器”能够避免STW，适应高并发场景，效率较高。</p>
+<h3 id="四总结">四、总结</h3>
+<p>综上，本文从大方向介绍了普遍的GC思想，并描述了Java与Golang采用的不同GC策略。</p>
+<p>通过对比可以发现，两种语言采用的GC各有优劣。为了适应业务，做出很多独特的优化和改进，使语言在适用领域能够最大程度发挥作用。</p>
+<p>Java发展时间长，GC机制较完善，效率高，碎片化小，兼顾了各种场景下的垃圾回收，充分利用堆栈空间。而Golang将更多的精力放在了并发解决上，也是其一贯的设计思想，相对Java来说机制不够完善，但针对并发的处理有独特的方式，因而或许更适合高并发的高GC的业务场景。</p>
+<p>因此，Golang的三色标记法，是“非分代的、非移动的”（不同于Java），同时也是高度“并发的”回收机制。同时Golang团队也在不停的优化GC策略，包括一些异步的抢占式调度等，相信Golang的会越来越好！</p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
